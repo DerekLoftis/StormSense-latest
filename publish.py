@@ -112,6 +112,8 @@ def place(raw, site):
             if not m:
                 continue
             st, _, datum, kind = m.groups()
+            if datum == "NAVD" and kind == "_hc.html" and os.path.exists(os.path.join(src, n.replace("_NAVD_hc", "_hc"))):
+                continue  # stale 30d page; the current NAVD page has no datum in its name
             if datum is None:
                 if kind != "_hc.html":
                     continue
