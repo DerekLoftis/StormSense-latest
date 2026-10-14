@@ -4,7 +4,7 @@ StormSense, and write them to fixed paths under site/ for GitHub Pages.
 
     python publish.py [site_dir] [work_dir]
 
-    site/fore56/<ST>_fore56_{MLLW,NAVD}.{html,csv}   forecast (Tidewatch f36 for now)
+    site/fore72/<ST>_fore72_{MLLW,NAVD}.{html,csv}   forecast, 72 h planned (Tidewatch f36 for now)
     site/7day/<ST>_7day_{MLLW,NAVD}.{html,csv}       recent observations (Tidewatch 3d)
     site/30day/<ST>_30day_{MLLW,NAVD}.{html,csv}     30-day observations (Tidewatch 30d)
 
@@ -28,8 +28,8 @@ TIDEWATCH_URL = os.environ.get("TIDEWATCH_URL", "https://web4.vims.edu/physical/
 UA = {"User-Agent": "stormsense-latest (VIMS)"}
 HERE = os.path.dirname(os.path.abspath(__file__))
 # Tidewatch product -> StormSense name
-PRODUCTS = {"f36": "fore56", "3d": "7day", "30d": "30day"}
-LABELS = {"fore56": "Forecast", "7day": "7-day observations", "30day": "30-day observations"}
+PRODUCTS = {"f36": "fore72", "3d": "7day", "30d": "30day"}
+LABELS = {"fore72": "Forecast", "7day": "7-day observations", "30day": "30-day observations"}
 # The Tidewatch NAVD chart page has no datum in its name (SWPT_2018_f36_hc.html).
 NAME = re.compile(r"^([A-Z0-9]+)_\d{4}_(f36|3d|30d)(?:_(MLLW|NAVD))?(_hc\.html|\.csv)$")
 PICKLE = re.compile(r"^[A-Z0-9]+_\d{4}_f36\.pypickle$")

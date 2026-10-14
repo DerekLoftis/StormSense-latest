@@ -5,13 +5,13 @@ in MLLW and NAVD88, served on GitHub Pages at fixed addresses that are
 overwritten every 6 hours (nothing is archived):
 
     https://derekloftis.github.io/StormSense-latest/                         index
-    https://derekloftis.github.io/StormSense-latest/fore56/SWPT_fore56_NAVD.html
+    https://derekloftis.github.io/StormSense-latest/fore72/SWPT_fore72_NAVD.html
     https://derekloftis.github.io/StormSense-latest/7day/SWPT_7day_MLLW.csv
     https://derekloftis.github.io/StormSense-latest/30day/SWPT_30day_NAVD.html
 
 | Folder  | Product                    | Placeholder source for now     |
 |---------|----------------------------|--------------------------------|
-| fore56  | forecast (to become 56 h)  | Tidewatch 36 h forecast (f36)  |
+| fore72  | forecast (to become 72 h)  | Tidewatch 36 h forecast (f36)  |
 | 7day    | recent observations        | Tidewatch 3-day hindcast (3d)  |
 | 30day   | 30-day observations        | Tidewatch 30-day hindcast (30d)|
 

@@ -33,6 +33,7 @@ BRANDS = {
     "stormsense": ("Disclaimer: StormSense\u2122 Predictive Plots are computer-generated operational storm tide "
                    "forecasts; the user assumes any and all risk.", "stormsense_logo.png"),
 }
+RESIDUAL = {"stormsense": "#00E5EE"}  # residual series color per brand (cyan, as in the StormSense logo)
 # NWS flood categories, colors as on NWPS hydrographs (water.noaa.gov)
 FLOOD = (("action", "Action", "#FFFF00"), ("minor", "Minor", "#FF9900"),
          ("moderate", "Moderate", "#FF0000"), ("major", "Major", "#CC33FF"))
@@ -134,7 +135,7 @@ def main(argv):
     hk = next((k for k in ("HAT", "MHHW", "MSL") if k in d), None)  # HAT+n steps from MHHW (or MSL) without a HAT
     disclaimer, logo_name = BRANDS[opt.get("brand", "vims")]
     cfg = {"lines": lines, "hat": round(d[hk] + shift, 2) if hats and hk else None, "hatName": hk, "style": STYLE,
-           "datum": datum, "disclaimer": disclaimer, "logo": None, "logoAspect": 0.25, "note": opt.get("note")}
+           "datum": datum, "disclaimer": disclaimer, "residual": RESIDUAL.get(opt.get("brand", "vims")), "logo": None, "logoAspect": 0.25, "note": opt.get("note")}
     logo = next((a.split("=", 1)[1] for a in argv if a.startswith("--logo=")),
                 os.path.join(os.path.dirname(os.path.abspath(__file__)), logo_name))
     if os.path.exists(logo):
@@ -151,6 +152,11 @@ def main(argv):
             // --- tidal datum reference lines (added) ---
             (function () {
                 var cfg = %s;
+                if (cfg.residual) {
+                    chart.series.forEach(function (s) {
+                        if (s.name === 'Residual') s.update({color: cfg.residual}, false);
+                    });
+                }
                 var dmax = -1e9, dmin = 1e9;
                 chart.series.forEach(function (s) {  // residuals set the floor, not the HAT+n steps
                     var res = s.name === 'Residual';
