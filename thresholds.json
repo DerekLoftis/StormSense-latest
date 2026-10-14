@@ -1,0 +1,311 @@
+{
+ "AXTV": {
+  "action": 2.5,
+  "datum": "NAVD88",
+  "lid": "AXTV2",
+  "major": 6.6,
+  "minor": 3.3,
+  "moderate": 4.2,
+  "name": "Potomac River at Alexandria",
+  "units": "ft"
+ },
+ "BISH": {
+  "action": 3,
+  "datum": "MLLW",
+  "lid": "BISM2",
+  "major": 4.2,
+  "minor": 3.2,
+  "moderate": 3.7,
+  "name": "Chesapeake Bay at Bishops Head (IN MLLW)",
+  "units": "ft"
+ },
+ "CBBT": {
+  "action": 4.5,
+  "datum": "MLLW",
+  "lid": "CHBV2",
+  "major": 6,
+  "minor": 5,
+  "moderate": 5.5,
+  "name": "Chesapeake Bay at Chesapeake Bay Bridge Tunnel (IN MLLW)",
+  "units": "ft"
+ },
+ "CRSM": {
+  "action": 3,
+  "datum": "MLLW",
+  "lid": "CRSM2",
+  "major": 5,
+  "minor": 3.5,
+  "moderate": 4,
+  "name": "Chesapeake Bay above Little Annemessex River at Crisfield MD (MLLW)",
+  "units": "ft"
+ },
+ "DAHL": {
+  "action": 3,
+  "datum": "MLLW",
+  "lid": "NCDV2",
+  "major": 7,
+  "minor": 3.5,
+  "moderate": 5,
+  "name": "Upper Machodoc Creek near Dahlgren (IN MLLW)",
+  "units": "ft"
+ },
+ "EZMV": {
+  "action": 4.5,
+  "datum": "MLLW",
+  "lid": "EZMV2",
+  "major": 7,
+  "minor": 5,
+  "moderate": 6,
+  "name": "Elizabeth River at the Midtown Tunnel (in MLLW)",
+  "units": "ft"
+ },
+ "KIPT": {
+  "action": 4,
+  "datum": "MLLW",
+  "lid": "KPTV2",
+  "major": 5.5,
+  "minor": 4.5,
+  "moderate": 5,
+  "name": "Chesapeake Bay near Kiptopeke (IN MLLW)",
+  "units": "ft"
+ },
+ "LEWI": {
+  "action": 2.5,
+  "datum": "MLLW",
+  "lid": "LWTV2",
+  "major": 4,
+  "minor": 3,
+  "moderate": 3.5,
+  "name": "Potomac River at Lewisetta (IN MLLW)",
+  "units": "ft"
+ },
+ "MNPT": {
+  "action": 4.5,
+  "datum": "MLLW",
+  "lid": "MNPV2",
+  "major": 7,
+  "minor": 5,
+  "moderate": 6,
+  "name": "Elizabeth River near Money Point (IN MLLW)",
+  "units": "ft"
+ },
+ "NSWV": {
+  "action": 2.5,
+  "datum": "MLLW",
+  "lid": "NSWV2",
+  "major": 4.5,
+  "minor": 3,
+  "moderate": 3.5,
+  "name": "Nassawadox Creek near Bayford (IN MLLW)",
+  "units": "ft"
+ },
+ "RAPV": {
+  "action": 2.5,
+  "datum": "MLLW",
+  "lid": "RAPV2",
+  "major": 4,
+  "minor": 3,
+  "moderate": 3.5,
+  "name": "Rappahannock River at Tappahannock (IN MLLW)",
+  "units": "ft"
+ },
+ "RICV": {
+  "action": 6,
+  "datum": "NAVD88",
+  "lid": "RICV2",
+  "major": 28,
+  "minor": 8,
+  "moderate": 19,
+  "name": "James River (VA) at Richmond Locks",
+  "units": "ft"
+ },
+ "SLIM": {
+  "action": 2.5,
+  "datum": "MLLW",
+  "lid": "SLIM2",
+  "major": 5,
+  "minor": 3,
+  "moderate": 4,
+  "name": "Patuxent River at Solomons Island (IN MLLW)",
+  "units": "ft"
+ },
+ "SWPT": {
+  "action": 4,
+  "datum": "MLLW",
+  "lid": "SWPV2",
+  "major": 6.5,
+  "minor": 4.5,
+  "moderate": 5.5,
+  "name": "James River (VA) at Sewell's Point (IN MLLW)",
+  "units": "ft"
+ },
+ "USBC": {
+  "datum": "MLLW",
+  "lid": "BLYV2",
+  "major": 7.5,
+  "minor": 5.5,
+  "moderate": 6.5,
+  "name": "Elizabeth River at Bailey Creek near Chesapeake VA (IN MLLW)",
+  "units": "ft"
+ },
+ "USFM": {
+  "action": 4,
+  "datum": "MLLW",
+  "lid": "FTMV2",
+  "major": 6.5,
+  "minor": 4.5,
+  "moderate": 5.5,
+  "name": "James River (VA) at Fort Monroe (IN MLLW)",
+  "units": "ft"
+ },
+ "USHR": {
+  "action": 4,
+  "datum": "MLLW",
+  "lid": "HMNV2",
+  "major": 6.5,
+  "minor": 4.5,
+  "moderate": 5.5,
+  "name": "Hampton River near Hampton (IN MLLW)",
+  "units": "ft"
+ },
+ "USJT": {
+  "action": 3.5,
+  "datum": "MLLW",
+  "lid": "JSFV2",
+  "major": 5,
+  "minor": 4,
+  "moderate": 4.5,
+  "name": "James River (VA) at Jamestown/Scotland Ferry (IN MLLW)",
+  "units": "ft"
+ },
+ "USLB": {
+  "action": 4,
+  "datum": "NAVD88",
+  "lid": "LONV2",
+  "major": 7,
+  "minor": 5,
+  "moderate": 6,
+  "name": "London Bridge Creek at Route 58 in VA Beach",
+  "units": "ft"
+ },
+ "USLI": {
+  "action": 4,
+  "datum": "MLLW",
+  "lid": "LHNV2",
+  "major": 5.5,
+  "minor": 4.5,
+  "moderate": 5,
+  "name": "Lynnhaven River near Lynnhaven Inlet (IN MLLW)",
+  "units": "ft"
+ },
+ "USLN": {
+  "action": 3.25,
+  "datum": "MLLW",
+  "lid": "LTCV2",
+  "major": 6,
+  "minor": 4,
+  "moderate": 4.5,
+  "name": "Little Neck Creek at Pinewood Rd in Virginia Beach (MLLW)",
+  "units": "ft"
+ },
+ "USLR": {
+  "action": 5.75,
+  "datum": "MLLW",
+  "lid": "LRBV2",
+  "major": 11.25,
+  "minor": 7.75,
+  "moderate": 8.75,
+  "name": "Lake Rudee near Bells Rd in Virginia Beach (MLLW)",
+  "units": "ft"
+ },
+ "USPA": {
+  "action": 4,
+  "datum": "NAVD88",
+  "lid": "EBRV2",
+  "major": 6.5,
+  "minor": 4.5,
+  "moderate": 5.5,
+  "name": "Elizabeth River at Route 165 in Virginia Beach",
+  "units": "ft"
+ },
+ "USPT": {
+  "action": 4.5,
+  "datum": "MLLW",
+  "lid": "ELZV2",
+  "major": 7,
+  "minor": 5,
+  "moderate": 6,
+  "name": "Elizabeth River near Pinehurst in Portsmouth (IN MLLW)",
+  "units": "ft"
+ },
+ "USSF": {
+  "action": 5,
+  "datum": "MLLW",
+  "lid": "NMDV2",
+  "major": 8,
+  "minor": 5.5,
+  "moderate": 7,
+  "name": "Nansemond River at Suffolk (IN MLLW)",
+  "units": "ft"
+ },
+ "USTC": {
+  "action": 3.5,
+  "datum": "NAVD88",
+  "lid": "THAV2",
+  "major": 6,
+  "minor": 4,
+  "moderate": 5,
+  "name": "Thalia Creek at Route 58 in Thalia",
+  "units": "ft"
+ },
+ "USWN": {
+  "action": 4.5,
+  "datum": "NAVD88",
+  "lid": "WNCV2",
+  "major": 8,
+  "minor": 5.5,
+  "moderate": 6.5,
+  "name": "West Neck Creek near Mapleton",
+  "units": "ft"
+ },
+ "WACH": {
+  "action": 6,
+  "datum": "MLLW",
+  "lid": "WAHV2",
+  "major": 8,
+  "minor": 6.5,
+  "moderate": 7.5,
+  "name": "Atlantic Coast at Wachapreague (IN MLLW)",
+  "units": "ft"
+ },
+ "WADC": {
+  "action": 4.2,
+  "datum": "MLLW",
+  "lid": "WASD2",
+  "major": 7,
+  "minor": 5.3,
+  "moderate": 6.5,
+  "name": "Washington Channel at SW Waterfront (IN MLLW)",
+  "units": "ft"
+ },
+ "WMPT": {
+  "action": 2.5,
+  "datum": "MLLW",
+  "lid": "WNDV2",
+  "major": 4,
+  "minor": 3,
+  "moderate": 3.5,
+  "name": "Chesapeake Bay at Windmill Point (IN MLLW)",
+  "units": "ft"
+ },
+ "YRCG": {
+  "action": 4,
+  "datum": "MLLW",
+  "lid": "YKTV2",
+  "major": 5.5,
+  "minor": 4.5,
+  "moderate": 5,
+  "name": "Chesapeake Bay near Yorktown (IN MLLW)",
+  "units": "ft"
+ }
+}
