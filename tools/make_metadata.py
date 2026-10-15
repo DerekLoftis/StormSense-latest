@@ -222,7 +222,7 @@ def render_html(d, prod, dat, shot, sample, rows):
     with open(shot, "rb") as f:
         src = "data:image/png;base64," + base64.b64encode(f.read()).decode()
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body>
-<h1>{d["title"]}</h1>
+<h1>{d["title"].replace("(CSV) ", "(CSV)<br>")}</h1>
 <img class="chart" src="{src}">
 <p class="cap"><b>Figure 1.</b> {d["figure_1"]}</p>
 <p>{d["introduction"]}</p>
