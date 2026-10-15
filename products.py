@@ -251,7 +251,7 @@ def hindcasts(raw, tides, offs):
                         continue
                     v = float(r[1])
                     t = tide.get(ms(parse_t(r[0])))
-                    out.append([r[0], "%.3f" % v] + (["%.3f" % (t + shift), "%.3f" % (v - t - shift)]
+                    out.append([r[0], fmt(v)] + ([fmt(t + shift), fmt(v - t - shift)]
                                                      if t is not None else ["", ""]))
                 write_csv(path, ["date_time", "water_level_ft", "astro_tide", "residual"], out)
             else:

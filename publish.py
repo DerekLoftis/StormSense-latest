@@ -200,6 +200,7 @@ def main(site="site", work="work"):
     shutil.copy(os.path.join(HERE, "styler", "stormsense_logo.png"), os.path.join(site, "jslib"))
     shutil.copy(os.path.join(HERE, "stormsense_logo.png"), site)
     shutil.copy(thresholds, os.path.join(site, "thresholds.json"))
+    shutil.copytree(os.path.join(HERE, "metadata"), os.path.join(site, "metadata"), dirs_exist_ok=True)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     write_index(site, stations, json.load(open(thresholds)), now)
     with open(os.path.join(site, "latest.json"), "w") as f:
@@ -254,6 +255,10 @@ show Tidewatch's 36-hour forecast for now.</p>
 <p class="disc">NAVD88 charts show the NWS flood categories (Action, Minor, Moderate, Major) from the
 National Water Prediction Service and the MLLW line; MLLW charts show the tidal datums. Click a line's label
 on the right of a chart to hide or show it.</p>
+<p class="disc">CSV field descriptions (PDF): fore72 <a href="metadata/stormsense-metadata-for-fore72-csv-data.pdf">MLLW</a>
+/ <a href="metadata/stormsense-metadata-for-fore72-csv-data-NAVD.pdf">NAVD88</a>; 7day
+<a href="metadata/stormsense-metadata-for-7day-csv-data.pdf">MLLW</a> / <a href="metadata/stormsense-metadata-for-7day-csv-data-NAVD.pdf">NAVD88</a>;
+30day <a href="metadata/stormsense-metadata-for-30day-csv-data.pdf">MLLW</a> / <a href="metadata/stormsense-metadata-for-30day-csv-data-NAVD.pdf">NAVD88</a>.</p>
 <div class="wrap"><table><thead><tr><th rowspan="2">Station</th>{head1}<th rowspan="2">NWS gauge</th></tr>
 <tr>{head2}</tr></thead>
 <tbody>
