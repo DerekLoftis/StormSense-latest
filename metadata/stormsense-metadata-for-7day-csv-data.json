@@ -1,5 +1,5 @@
 {
- "title": "Metadata: StormSense Comma Separated Values (CSV) and JSON for 7-Day Hindcasts (7day)",
+ "title": "Metadata: StormSense Comma Separated Values (CSV) and JavaScript Object Notation (JSON) for 7-Day Hindcasts (7day)",
  "product": "7day",
  "datum": "MLLW",
  "units": "feet",

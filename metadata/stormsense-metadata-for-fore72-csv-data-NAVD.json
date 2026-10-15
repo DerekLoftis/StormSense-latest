@@ -1,5 +1,5 @@
 {
- "title": "Metadata: StormSense Comma Separated Values (CSV) and JSON for 72-Hour Forecasts (fore72)",
+ "title": "Metadata: StormSense Comma Separated Values (CSV) and JavaScript Object Notation (JSON) for 72-Hour Forecasts (fore72)",
  "product": "fore72",
  "datum": "NAVD88",
  "units": "feet",

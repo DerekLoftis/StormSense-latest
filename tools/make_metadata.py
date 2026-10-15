@@ -124,7 +124,7 @@ def describe(prod, dat):
         scope = f"{prod} downloads only include observations from the last {span} hindcast period (Figure 1; sample rows in Table 1)"
         intro = (f"Figure 1 shows a StormSense {prod} hindcast chart and Table 1 the first and last rows of the matching download. "
                  "Each field below is tied to the series it is drawn as in Figure 1 and to its column in Table 1.")
-    d = {"title": f"Metadata: StormSense Comma Separated Values (CSV) and JSON for {label}", "product": prod,
+    d = {"title": f"Metadata: StormSense Comma Separated Values (CSV) and JavaScript Object Notation (JSON) for {label}", "product": prod,
          "datum": "MLLW" if dat == "MLLW" else "NAVD88", "units": "feet", "time_zone": "UTC (Z)",
          "interval_minutes": 6, "introduction": intro, "figure_1": fig, "table_1": tab, "fields_scope": scope,
          "fields": [{"name": n, "units": u, "chart_series": SERIES[s][0] if s else None, "description": t}
@@ -187,7 +187,7 @@ CSS = """
 @page{size:letter;margin:0.55in 0.65in}
 *{font-family:Arial,'Liberation Sans',Helvetica,sans-serif}
 body{font-size:10pt;color:#111;line-height:1.28}
-h1{font-size:13pt;margin:0 0 8px;text-decoration:underline}
+h1{font-size:13pt;margin:0 0 8px;text-decoration:underline;text-align:center}
 h2{font-size:11pt;margin:12px 0 5px;break-after:avoid}
 h2+p,h2+.f{break-before:avoid}
 .sub{font-weight:normal;font-style:italic;font-size:9pt}
