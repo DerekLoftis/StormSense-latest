@@ -1,18 +1,22 @@
-"""Build the StormSense Latest site: copy the newest Tidewatch charts and CSVs
-(placeholders until StormSense's own products exist), restyle the charts for
-StormSense, and write them to fixed paths under site/ for GitHub Pages.
+"""Build the StormSense Latest site: the 72-hour forecast from NWS P-ETSS and the
+gauge observations Tidewatch publishes, restyled for StormSense and written to
+fixed paths under site/ for GitHub Pages.
 
     python publish.py [site_dir] [work_dir]
 
-    site/fore72/<ST>_fore72_{MLLW,NAVD}.{html,csv}   forecast, 72 h planned (Tidewatch f36 for now)
-    site/7day/<ST>_7day_{MLLW,NAVD}.{html,csv}       recent observations (Tidewatch 3d)
-    site/30day/<ST>_30day_{MLLW,NAVD}.{html,csv}     30-day observations (Tidewatch 30d)
+    site/fore72/<ST>_fore72_{MLLW,NAVD}.{html,csv}   72-hour forecast from P-ETSS with its 10-90%
+                                                     cone (Tidewatch's 36-hour forecast where P-ETSS
+                                                     has no point for the station)
+    site/7day/<ST>_7day_{MLLW,NAVD}.{html,csv}       last 7 days of observations (Tidewatch 30d + 3d)
+                                                     with the P-ETSS / CO-OPS tide and residual
+    site/30day/<ST>_30day_{MLLW,NAVD}.{html,csv}     last 30 days, likewise
 
 MLLW charts get the tidal datum lines; NAVD charts get the MLLW line and the
 NWS flood categories from thresholds.json (refreshed from NWPS each run when
 reachable). Nothing is archived: each run replaces the last.
 """
 
+import csv
 import html
 import json
 import os
@@ -22,14 +26,17 @@ import subprocess
 import sys
 import time
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 TIDEWATCH_URL = os.environ.get("TIDEWATCH_URL", "https://web4.vims.edu/physical/tidewatch/")
 UA = {"User-Agent": "stormsense-latest (VIMS)"}
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import petss  # noqa: E402
+import products  # noqa: E402
 # Tidewatch product -> StormSense name
 PRODUCTS = {"f36": "fore72", "3d": "7day", "30d": "30day"}
-LABELS = {"fore72": "Forecast", "7day": "7-day observations", "30day": "30-day observations"}
+LABELS = {"fore72": "72-hour forecast", "7day": "7-day observations", "30day": "30-day observations"}
 # The Tidewatch NAVD chart page has no datum in its name (SWPT_2018_f36_hc.html).
 NAME = re.compile(r"^([A-Z0-9]+)_\d{4}_(f36|3d|30d)(?:_(MLLW|NAVD))?(_hc\.html|\.csv)$")
 PICKLE = re.compile(r"^[A-Z0-9]+_\d{4}_f36\.pypickle$")
@@ -80,6 +87,59 @@ def refresh_thresholds(work):
     return out
 
 
+COOPS = ("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&station={id}"
+         "&begin_date={a:%Y%m%d}&end_date={b:%Y%m%d}&datum=MLLW&units=english&time_zone=gmt&interval=6&format=json")
+
+
+def coops_tide(nos_id, days=32):
+    """{datetime: tide} from NOAA CO-OPS 6-minute predictions (MLLW, ft); P-ETSS uses the same harmonics."""
+    b = datetime.now(timezone.utc) + timedelta(days=1)
+    js = json.loads(get(COOPS.format(id=nos_id, a=b - timedelta(days=days), b=b)))
+    return {datetime.strptime(p["t"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc): float(p["v"])
+            for p in js.get("predictions", [])}
+
+
+def transform(raw):
+    """Build the StormSense products from the Tidewatch files and P-ETSS (see products.py)."""
+    lids = {r["tidewatch_id"]: r["nws_lid"] for r in csv.DictReader(open(os.path.join(HERE, "stations_nws.csv")))}
+    pet, cycle, older = {}, None, None
+    try:
+        cycle, a, b = petss.newest_cycle()
+        pet = petss.load(cycle, a, b, set(lids.values()))
+        print(f"P-ETSS {cycle:%Y-%m-%d %HZ}: {len(pet)} NWS gauges")
+        oc, older = petss.oldest_csv(cycle)
+        series = petss.tide_series([older, a])
+        print(f"P-ETSS tide back to the {oc:%Y-%m-%d %HZ} cycle's hindcast" if oc else "P-ETSS: no older cycle")
+    except Exception as e:
+        print("P-ETSS unavailable:", e)
+        series = {}
+    done, adjs, offs = products.fore72(raw, lids, pet, cycle)
+    print(f"fore72 from P-ETSS: {len(done)} files ({', '.join(done)})")
+    print(f"7day: {products.seven_day(raw)} pages")
+    tides, coops = {}, []
+    for st, adj in adjs.items():
+        sid = pet[lids[st]]["id"]
+        tide = {}
+        if sid.isdigit():  # NOAA station: CO-OPS predictions reach the full 30 days
+            try:
+                tide.update(coops_tide(sid))
+                coops.append(st)
+            except Exception as e:
+                print(f"  CO-OPS {sid} ({st}): {e}")
+        pt = series.get(sid, {})
+        both = [t for t in pt if t in tide]
+        if both:
+            print(f"  {st}: CO-OPS minus P-ETSS tide, max |diff| {max(abs(tide[t] - pt[t]) for t in both):.3f} ft over {len(both)} points")
+        tide.update(pt)
+        tides[st] = {products.ms(t): v + adj for t, v in tide.items()}
+    print(f"astronomic tide for hindcasts: {len(tides)} stations (CO-OPS for {', '.join(coops) or 'none'})")
+    print(f"hindcast charts with tide and residual: {products.hindcasts(raw, tides, offs)}")
+    return {"cycle": cycle.strftime("%Y-%m-%dT%HZ") if cycle else None,
+            "stations": sorted({d.split()[0] for d in done}),
+            "hindcast_tide": sorted(tides), "coops_tide": coops,
+            "alignment_ft": {k: round(v, 3) for k, v in adjs.items()}}
+
+
 def style(raw, work, thresholds):
     """Restyle each product's chart pages; pages that can't be styled stay as Tidewatch's."""
     styler = os.path.join(HERE, "styler")
@@ -91,7 +151,7 @@ def style(raw, work, thresholds):
         r = subprocess.run([sys.executable, os.path.join(styler, "style_pages.py"), "--product", tw,
                             "--pages", src, "--csv", src, "--pickles", os.path.join(raw, "f36"),
                             "--out", out, "--jsdir=../jslib", "--brand=stormsense",
-                            "--thresholds=" + thresholds, "--navdlines=mllw"],
+                            "--thresholds=" + thresholds, "--navdlines=mllw", "--nom30"],
                            capture_output=True, text=True)
         print((r.stdout + r.stderr).strip()[-2000:])
         if r.returncode == 0:
@@ -130,6 +190,7 @@ def main(site="site", work="work"):
     shutil.rmtree(work, ignore_errors=True)
     os.makedirs(work)
     failed = fetch(raw)
+    pet = transform(raw)
     thresholds = refresh_thresholds(work)
     style(raw, work, thresholds)
     stations = place(raw, site)
@@ -142,7 +203,7 @@ def main(site="site", work="work"):
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     write_index(site, stations, json.load(open(thresholds)), now)
     with open(os.path.join(site, "latest.json"), "w") as f:
-        json.dump({"updated": now, "source": TIDEWATCH_URL, "files": sum(len(v) for v in stations.values()),
+        json.dump({"updated": now, "source": TIDEWATCH_URL, "files": sum(len(v) for v in stations.values()), "petss": pet,
                    "failed": failed}, f, indent=1)
     open(os.path.join(site, ".nojekyll"), "w").close()
     print(f"{sum(len(v) for v in stations.values())} files for {len(stations)} stations; {len(failed)} failed")
@@ -187,6 +248,9 @@ a{{color:#0d6e8a}}
 update at about {SCHEDULE}.</p>
 <p class="disc">Disclaimer: StormSense&trade; Predictive Plots are computer-generated operational storm tide
 forecasts; the user assumes any and all risk.</p>
+<p class="disc">Forecasts come from the NWS Probabilistic Extra-Tropical Storm Surge model (P-ETSS),
+interpolated to 6 minutes; the shaded cone is its 10%&ndash;90% range. Stations without a P-ETSS point
+show Tidewatch's 36-hour forecast for now.</p>
 <p class="disc">NAVD88 charts show the NWS flood categories (Action, Minor, Moderate, Major) from the
 National Water Prediction Service and the MLLW line; MLLW charts show the tidal datums. Click a line's label
 on the right of a chart to hide or show it.</p>

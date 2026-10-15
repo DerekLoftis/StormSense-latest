@@ -1,5 +1,5 @@
-# Every 6 hours, rebuild the StormSense Latest pages (Tidewatch charts as
-# placeholders for now) at fixed paths and deploy them to GitHub Pages.
+# Every 6 hours, rebuild the StormSense Latest pages (P-ETSS forecasts and
+# gauge observations) at fixed paths and deploy them to GitHub Pages.
 # Nothing is committed or archived; each deploy replaces the last.
 name: Publish StormSense Latest
 

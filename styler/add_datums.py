@@ -4,7 +4,7 @@ Tidewatch 3.0 Highcharts page.
     python3 add_datums.py STATION IN.html[.gz] PICKLE.pypickle[.gz] {MLLW,NAVD} OUT.html
         [--cdn | --inline] [--logo=PNG] [--datums=NOAA.json] [--twoffset=FT]
         [--datumsjson=FILE] [--rebase=DELTA] [--note=TEXT] [--jsdir=REL]
-        [--brand=stormsense] [--thresholds=FILE] [--floodoffset=FT] [--navdlines=mllw]
+        [--brand=stormsense] [--thresholds=FILE] [--floodoffset=FT] [--navdlines=mllw] [--nom30]
 
 Datums come from NOAA's metadata API (--datums, the raw response of
 mdapi/prod/webapi/stations/<id>/datums.json?units=english) and are converted to
@@ -106,7 +106,7 @@ def main(argv):
                 raise SystemExit("%s: no NOAA NAVD88 and no usable Tidewatch offset" % station)
             navd = twoff
     shift = 0.0 if datum == "MLLW" else -navd  # MLLW heights -> NAVD heights
-    m30 = m30_navd(pkl) + (twoff if datum == "MLLW" else 0.0)
+    m30 = None if "--nom30" in argv else m30_navd(pkl) + (twoff if datum == "MLLW" else 0.0)
     lines = []
     keep = ("MLLW",) if opt.get("navdlines") == "mllw" and datum != "MLLW" else ("HAT", "MHHW", "MSL", "MLLW", "LAT", "NAVD88")
     for name in keep:
@@ -130,7 +130,8 @@ def main(argv):
                 v = t.get(key)
                 if v is not None and v > -999:
                     lines.append({"name": name, "value": round(v + tshift, 2)})
-    lines.append({"name": "m30", "value": round(m30, 2)})
+    if "--nom30" not in argv:
+        lines.append({"name": "m30", "value": round(m30, 2)})
     hats = len(keep) > 1  # HAT+n steps only with the full set of datum lines
     hk = next((k for k in ("HAT", "MHHW", "MSL") if k in d), None)  # HAT+n steps from MHHW (or MSL) without a HAT
     disclaimer, logo_name = BRANDS[opt.get("brand", "vims")]
@@ -161,7 +162,9 @@ def main(argv):
                 chart.series.forEach(function (s) {  // residuals set the floor, not the HAT+n steps
                     var res = s.name === 'Residual';
                     s.yData.forEach(function (v) {
-                        if (v !== null && !isNaN(v)) { if (!res) dmax = Math.max(dmax, v); dmin = Math.min(dmin, v); }
+                        (Array.isArray(v) ? v : [v]).forEach(function (y) {  // arearange points are [low, high]
+                            if (y !== null && !isNaN(y)) { if (!res) dmax = Math.max(dmax, y); dmin = Math.min(dmin, y); }
+                        });
                     });
                 });
                 var hiLine = cfg.lines.reduce(function (a, l) { return Math.max(a, l.value); }, -1e9);
@@ -263,14 +266,21 @@ def main(argv):
         # move the plotted MLLW series from Tidewatch's MLLW onto the datum file's MLLW
         import re
         delta = float(opt["rebase"])
-        point = re.compile(r"(Date\.UTC\([^)]*\), )(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)\]")
+        utc = re.compile(r"Date\.UTC\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)(?:,[\d.]+)?\)")
 
-        def series(m):  # water levels move; the residual series does not
-            if '"name": "Residual"' in m.group(2):
-                return m.group(0)
-            return point.sub(lambda p: p.group(1) + repr(round(float(p.group(2)) + delta, 4)) + "]", m.group(1)) + m.group(2)
+        def to_ms(u):
+            import datetime as dt
+            t = dt.datetime(int(u[1]), int(u[2]) + 1, int(u[3]), int(u[4]), int(u[5]), int(u[6]), tzinfo=dt.timezone.utc)
+            return str(int(t.timestamp() * 1000))
 
-        html = re.sub(r'(\{"data": \[.*?\]\])(, [^{}]*?"name": "[^"]*"[^{}]*\})', series, html, flags=re.S)
+        def shift_data(m):  # water levels move; the residual series do not
+            series = json.loads(utc.sub(to_ms, m.group(1)))
+            for ser in series:
+                if ser.get("name") != "Residual":
+                    ser["data"] = [[p[0]] + [round(v + delta, 4) for v in p[1:]] for p in ser["data"]]
+            return "var data = " + json.dumps(series, separators=(",", ":")) + ";\n"
+
+        html = re.sub(r"var data = (\[.*?\]);\n", shift_data, html, count=1, flags=re.S)
     anchor = "chart.addSeries(data[ix]);\n            }"
     assert anchor in html, "unexpected page layout"
     html = html.replace(anchor, anchor + "\n" + js, 1)
