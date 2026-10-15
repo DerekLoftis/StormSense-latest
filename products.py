@@ -166,7 +166,10 @@ def align(st_pet, mllw_page, t0):
 def petss_page(page, st_pet, f, shift, st):
     """Hindcast: Tidewatch's observations against the P-ETSS tide. Forecast: P-ETSS."""
     html, series = read_page(page)
-    obs = next(s for s in series if s["name"] == "Observed")
+    obs = next((s for s in series if s["name"] == "Observed"), None)
+    if obs is None:
+        print(f"  {st}: {os.path.basename(page)} has no observations; chart left as Tidewatch's")
+        return
     ot = [datetime.fromtimestamp(p[0] / 1000, timezone.utc) for p in obs["data"]]
     ov = np.array([p[1] for p in obs["data"]], dtype=float)
     tide_h = petss.hindcast_tide(st_pet, ot) + shift + (f["astro_tide"][0] - petss.hindcast_tide(st_pet, [f["time"][0]])[0])
