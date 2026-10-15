@@ -24,9 +24,9 @@ by the median gap between observations and P-ETSS over the previous day (this
 matters at P-ETSS's "est" sites, which use a different reference). The chart
 shades the 10%-90% range as a cone of uncertainty in StormSense dark blue.
 
-    fore72 CSV: date_time, astro_tide, surge, bias, residual, SSforecast,
-                SSforecast_p10, SSforecast_p90, surge_p10, surge_p90
-    7day/30day CSV: date_time, water_level_ft, astro_tide, residual
+    fore72 CSV/JSON: date_time_z, astro_tide_ft, surge_ft, bias_ft, residual_ft, SSforecast_ft,
+                SSforecast_p10_ft, SSforecast_p90_ft, surge_p10_ft, surge_p90_ft
+    7day/30day CSV/JSON: date_time_z, water_level_ft, astro_tide_ft, residual_ft
 
 residual = SSforecast - astro_tide (forecast) or water_level_ft - astro_tide
 (hindcast). The hindcast tide is P-ETSS's (about 6 days back) and NOAA CO-OPS

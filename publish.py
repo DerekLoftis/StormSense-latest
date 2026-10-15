@@ -40,6 +40,9 @@ LABELS = {"fore72": "72-hour forecast", "7day": "7-day observations", "30day": "
 # The Tidewatch NAVD chart page has no datum in its name (SWPT_2018_f36_hc.html).
 NAME = re.compile(r"^([A-Z0-9]+)_\d{4}_(f36|3d|30d)(?:_(MLLW|NAVD))?(_hc\.html|\.csv)$")
 PICKLE = re.compile(r"^[A-Z0-9]+_\d{4}_f36\.pypickle$")
+# Retired or unusable Tidewatch stations, left out of StormSense (Derek, 2026-10-15): NN01-NN10 and
+# VB01-VB10 have not updated in over a year; USNW, USPF and USSV are non-tidal or lack needed data.
+DROP = re.compile(r"^(NN\d\d|VB\d\d|USNW|USPF|USSV)_")
 SCHEDULE = "00:20, 06:20, 12:20 and 18:20 UTC"  # keep in step with .github/workflows/publish.yml
 
 
@@ -58,7 +61,7 @@ def fetch(raw):
     """Download the current Tidewatch files into raw/<tidewatch product>/."""
     listing = get(TIDEWATCH_URL).decode("utf-8", "replace")
     hrefs = set(re.findall(r'href="([^"?/]+)"', listing))
-    names = sorted(n for n in hrefs if NAME.match(n) or PICKLE.match(n))
+    names = sorted(n for n in hrefs if (NAME.match(n) or PICKLE.match(n)) and not DROP.match(n))
     if not any(NAME.match(n) for n in names):
         sys.exit("no Tidewatch files found in the listing")
     failed = []
@@ -159,8 +162,33 @@ def style(raw, work, thresholds):
                 shutil.copy(os.path.join(out, n), os.path.join(src, n))
 
 
-def place(raw, site):
-    """Copy raw/<tidewatch product>/ into site/<StormSense product>/ under the new names."""
+DESCRIBE = {"fore72": "72-hour storm tide forecast", "7day": "7-day observed water level hindcast",
+            "30day": "30-day observed water level hindcast"}
+
+
+def write_json(csv_path, out, st, prod, datum, updated, source):
+    """JSON copy of a product CSV: metadata plus one record per row (blank values become null)."""
+    with open(csv_path) as f:
+        rows = list(csv.reader(f))
+    head = rows[0]
+    recs = []
+    for r in rows[1:]:
+        rec = {}
+        for h, v in zip(head, r):
+            rec[h] = v if h.startswith("date_time") else (float(v) if v not in ("", "nan") else None)
+        recs.append(rec)
+    meta = f"stormsense-metadata-for-{prod}-csv-data{'-NAVD' if datum == 'NAVD' else ''}.json"
+    doc = {"station": st, "product": prod, "description": DESCRIBE[prod],
+           "datum": "NAVD88" if datum == "NAVD" else "MLLW", "units": "feet", "time_zone": "UTC (Z)",
+           "interval_minutes": 6, "updated": updated, "source": source, "fields": head,
+           "metadata": f"../metadata/{meta}", "data": recs}
+    with open(out, "w") as f:
+        json.dump(doc, f, separators=(",", ":"))
+
+
+def place(raw, site, updated="", petss_stations=()):
+    """Copy raw/<tidewatch product>/ into site/<StormSense product>/ under the new names,
+    with a JSON copy of each CSV."""
     stations = {}
     for tw, prod in PRODUCTS.items():
         src = os.path.join(raw, tw)
@@ -169,7 +197,7 @@ def place(raw, site):
         os.makedirs(os.path.join(site, prod), exist_ok=True)
         for n in sorted(os.listdir(src)):
             m = NAME.match(n)
-            if not m:
+            if not m or DROP.match(n):
                 continue
             st, _, datum, kind = m.groups()
             if datum == "NAVD" and kind == "_hc.html" and os.path.exists(os.path.join(src, n.replace("_NAVD_hc", "_hc"))):
@@ -182,6 +210,15 @@ def place(raw, site):
             new = f"{st}_{prod}_{datum}{ext}"
             shutil.copy(os.path.join(src, n), os.path.join(site, prod, new))
             stations.setdefault(st, {})[(prod, datum, ext)] = f"{prod}/{new}"
+            if ext == ".csv":
+                if prod == "fore72":
+                    source = ("NWS P-ETSS" if st in petss_stations else "VIMS Tidewatch 36-hour forecast "
+                              "(no P-ETSS point for this station)")
+                else:
+                    source = "gauge observations; astronomical tide from NWS P-ETSS and NOAA CO-OPS predictions"
+                write_json(os.path.join(site, prod, new), os.path.join(site, prod, new[:-4] + ".json"),
+                           st, prod, datum, updated, source)
+                stations[st][(prod, datum, ".json")] = f"{prod}/{new[:-4]}.json"
     return stations
 
 
@@ -193,7 +230,8 @@ def main(site="site", work="work"):
     pet = transform(raw)
     thresholds = refresh_thresholds(work)
     style(raw, work, thresholds)
-    stations = place(raw, site)
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    stations = place(raw, site, now, set(pet.get("stations", ())))
     os.makedirs(os.path.join(site, "jslib"), exist_ok=True)
     for f in os.listdir(os.path.join(HERE, "styler", "jslib")):
         shutil.copy(os.path.join(HERE, "styler", "jslib", f), os.path.join(site, "jslib", f))
@@ -201,7 +239,6 @@ def main(site="site", work="work"):
     shutil.copy(os.path.join(HERE, "stormsense_logo.png"), site)
     shutil.copy(thresholds, os.path.join(site, "thresholds.json"))
     shutil.copytree(os.path.join(HERE, "metadata"), os.path.join(site, "metadata"), dirs_exist_ok=True)
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     write_index(site, stations, json.load(open(thresholds)), now)
     with open(os.path.join(site, "latest.json"), "w") as f:
         json.dump({"updated": now, "source": TIDEWATCH_URL, "files": sum(len(v) for v in stations.values()), "petss": pet,
@@ -222,7 +259,8 @@ def write_index(site, stations, flood, now):
         for p, d in cols:
             h = stations[st].get((p, d, ".html"))
             c = stations[st].get((p, d, ".csv"))
-            links = " ".join(f'<a href="{html.escape(u)}">{t}</a>' for u, t in ((h, "chart"), (c, "csv")) if u)
+            j = stations[st].get((p, d, ".json"))
+            links = " ".join(f'<a href="{html.escape(u)}">{t}</a>' for u, t in ((h, "chart"), (c, "csv"), (j, "json")) if u)
             cells.append(f"<td>{links}</td>")
         t = flood.get(st)
         nws = (f'<a href="https://water.noaa.gov/gauges/{t["lid"]}">{t["lid"]}</a>' if t else "")
@@ -255,10 +293,7 @@ show Tidewatch's 36-hour forecast for now.</p>
 <p class="disc">NAVD88 charts show the NWS flood categories (Action, Minor, Moderate, Major) from the
 National Water Prediction Service and the MLLW line; MLLW charts show the tidal datums. Click a line's label
 on the right of a chart to hide or show it.</p>
-<p class="disc">CSV field descriptions (PDF): fore72 <a href="metadata/stormsense-metadata-for-fore72-csv-data.pdf">MLLW</a>
-/ <a href="metadata/stormsense-metadata-for-fore72-csv-data-NAVD.pdf">NAVD88</a>; 7day
-<a href="metadata/stormsense-metadata-for-7day-csv-data.pdf">MLLW</a> / <a href="metadata/stormsense-metadata-for-7day-csv-data-NAVD.pdf">NAVD88</a>;
-30day <a href="metadata/stormsense-metadata-for-30day-csv-data.pdf">MLLW</a> / <a href="metadata/stormsense-metadata-for-30day-csv-data-NAVD.pdf">NAVD88</a>.</p>
+<p class="disc">Field descriptions for the CSV and JSON downloads: fore72: MLLW <a href="metadata/stormsense-metadata-for-fore72-csv-data.pdf">PDF</a> <a href="metadata/stormsense-metadata-for-fore72-csv-data.json">JSON</a>, NAVD88 <a href="metadata/stormsense-metadata-for-fore72-csv-data-NAVD.pdf">PDF</a> <a href="metadata/stormsense-metadata-for-fore72-csv-data-NAVD.json">JSON</a>; 7day: MLLW <a href="metadata/stormsense-metadata-for-7day-csv-data.pdf">PDF</a> <a href="metadata/stormsense-metadata-for-7day-csv-data.json">JSON</a>, NAVD88 <a href="metadata/stormsense-metadata-for-7day-csv-data-NAVD.pdf">PDF</a> <a href="metadata/stormsense-metadata-for-7day-csv-data-NAVD.json">JSON</a>; 30day: MLLW <a href="metadata/stormsense-metadata-for-30day-csv-data.pdf">PDF</a> <a href="metadata/stormsense-metadata-for-30day-csv-data.json">JSON</a>, NAVD88 <a href="metadata/stormsense-metadata-for-30day-csv-data-NAVD.pdf">PDF</a> <a href="metadata/stormsense-metadata-for-30day-csv-data-NAVD.json">JSON</a>.</p>
 <div class="wrap"><table><thead><tr><th rowspan="2">Station</th>{head1}<th rowspan="2">NWS gauge</th></tr>
 <tr>{head2}</tr></thead>
 <tbody>

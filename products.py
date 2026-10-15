@@ -3,11 +3,10 @@ the raw Tidewatch folders (publish.py renames them afterwards):
 
   fore72  P-ETSS 72-hour forecast (6-minute, with a 10-90% uncertainty cone)
           wherever P-ETSS covers the station's NWS gauge; elsewhere Tidewatch's
-          36-hour forecast. CSV fields date_time, astro_tide, residual,
-          SSforecast, SSforecast_p10, SSforecast_p90.
+          36-hour forecast. CSV fields in F72_HEAD.
   7day    the last 7 days, from the 30-day hindcast plus the newer 3-day one.
   30day   the 30-day hindcast.
-  Hindcast CSV fields: date_time, water_level_ft.
+  Hindcast CSV fields in HC_HEAD.
 """
 import csv
 import json
@@ -25,8 +24,9 @@ CONE = "rgba(20, 38, 96, 0.5)"  # dark blue of the StormSense logo, 50% transpar
 # fore72 CSV: P-ETSS keys -> fields (low/high are the 10th/90th percentiles, i.e. P-ETSS's 90%
 # and 10% exceedance levels)
 F72_KEYS = ("astro_tide", "surge", "bias", "residual", "SSforecast", "low", "high", "surge_low", "surge_high")
-F72_HEAD = ["date_time", "astro_tide", "surge", "bias", "residual", "SSforecast", "SSforecast_p10",
-            "SSforecast_p90", "surge_p10", "surge_p90"]
+F72_HEAD = ["date_time_z", "astro_tide_ft", "surge_ft", "bias_ft", "residual_ft", "SSforecast_ft",
+            "SSforecast_p10_ft", "SSforecast_p90_ft", "surge_p10_ft", "surge_p90_ft"]
+HC_HEAD = ["date_time_z", "water_level_ft", "astro_tide_ft", "residual_ft"]
 LEVELS = {"astro_tide", "SSforecast", "low", "high"}  # water levels (move with the datum)
 RENAME = {"Astronomic (m30)": "Astronomic Tide", "Astronomic (m30) Forecast": "Astronomic Tide Forecast",
           "36hr Forecast": "StormSense Forecast"}
@@ -253,7 +253,7 @@ def hindcasts(raw, tides, offs):
                     t = tide.get(ms(parse_t(r[0])))
                     out.append([r[0], fmt(v)] + ([fmt(t + shift), fmt(v - t - shift)]
                                                      if t is not None else ["", ""]))
-                write_csv(path, ["date_time", "water_level_ft", "astro_tide", "residual"], out)
+                write_csv(path, HC_HEAD, out)
             else:
                 html, series = read_page(path)
                 obs = next((s for s in series if s["name"] == "Observed"), None)

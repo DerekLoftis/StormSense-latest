@@ -1,0 +1,73 @@
+{
+ "title": "Metadata: StormSense Comma Separated Values (CSV) and JSON for 30-Day Hindcasts (30day)",
+ "product": "30day",
+ "datum": "NAVD88",
+ "units": "feet",
+ "time_zone": "UTC (Z)",
+ "interval_minutes": 6,
+ "introduction": "Figure 1 shows a StormSense 30day hindcast chart and Table 1 the first and last rows of the matching download. Each field below is tied to the series it is drawn as in Figure 1 and to its column in Table 1.",
+ "figure_1": "Example StormSense Chart of 30 days of hindcast data (NAVD) at NOAA’s Sewells Point tide gauge, in Norfolk, VA, looking backward 30 days from October 15, 2026 at 16:36 EDT (2026-10-15T20:36:00Z).",
+ "table_1": "Example StormSense Table of 30day hindcast data (NAVD) at NOAA’s Sewells Point tide gauge, in Norfolk, VA, through October 15, 2026 at 16:36 EDT (2026-10-15T20:36:00Z): the first and last rows, with the rows between skipped (…).",
+ "fields_scope": "30day downloads only include observations from the last 30 days hindcast period (Figure 1; sample rows in Table 1)",
+ "fields": [
+  {
+   "name": "date_time_z",
+   "units": "UTC",
+   "chart_series": null,
+   "description": "Date and time in Zulu/GMT (UTC), formatted as a string leading with the date as “YYYY-MM-DD” followed by the time (T) as “hh:mm:ss” and Z for Zulu time. Recorded in regular 6-minute intervals (0, 6, 12 … 54 minutes past the hour), listed in chronological order (Table 1, first column)."
+  },
+  {
+   "name": "water_level_ft",
+   "units": "ft",
+   "chart_series": "Observed",
+   "description": "Observed storm tide water level for the past 30 days at this monitoring location (solid red line in Figure 1). Formatted in units of feet rounded to three decimal places (thousandth of a foot) relative to the North American Vertical Datum of 1988 (NAVD88)."
+  },
+  {
+   "name": "astro_tide_ft",
+   "units": "ft",
+   "chart_series": "Astronomic Tide",
+   "description": "Harmonically predicted astronomical tide at the same times (solid blue line in Figure 1), from P-ETSS, with NOAA CO-OPS tide predictions further back at NOAA gauges (they match P-ETSS’s tide to 0.01 ft). Blank in the CSV (null in the JSON) where no prediction reaches back that far. Formatted in units of feet rounded to three decimal places (thousandth of a foot) relative to the North American Vertical Datum of 1988 (NAVD88)."
+  },
+  {
+   "name": "residual_ft",
+   "units": "ft",
+   "chart_series": "Residual",
+   "description": "Observed residual: water_level_ft − astro_tide_ft, the non-tidal water level from wind, air pressure, rain and river flow (solid cyan line in Figure 1). Feet; the same in MLLW and NAVD88. Blank (null) where astro_tide_ft is blank."
+  }
+ ],
+ "notes": [
+  "Each CSV has a JSON twin at the same address with .json in place of .csv: station, product, datum, units, time_zone, updated, source, fields and a link to this metadata, then a data list with one record per CSV row keyed by the field names above (numbers in feet, blanks as null)."
+ ],
+ "nws_flood_thresholds": {
+  "description": "The flood categories on NAVD88 charts (colored lines labeled at the right of Figure 1) are defined by the National Weather Service (NWS), not by StormSense. NWS forecast offices set them for each forecast gauge together with local emergency managers, based on the impacts observed near that gauge, and publish them through the National Water Prediction Service. StormSense refreshes them from NWPS with every update and shows them only at stations tied to an NWS gauge; thresholds that NWS publishes in MLLW are shifted to NAVD88 with the station’s MLLW–NAVD88 separation.",
+  "source": "https://water.noaa.gov/",
+  "thresholds": [
+   {
+    "name": "Action (yellow)",
+    "color": "#FFFF00",
+    "definition": "The level at which the NWS and its partners begin preparing for possible flooding; water may reach the edges of low-lying areas, but significant impacts are not yet expected."
+   },
+   {
+    "name": "Minor (orange)",
+    "color": "#FF9900",
+    "definition": "Minor flooding: minimal or no property damage, but possibly some public threat, such as water over low-lying roads, parking lots and parks near the shore."
+   },
+   {
+    "name": "Moderate (red)",
+    "color": "#FF0000",
+    "definition": "Moderate flooding: some inundation of structures and roads near the water, with some evacuations of people or moving of property to higher ground."
+   },
+   {
+    "name": "Major (purple)",
+    "color": "#CC33FF",
+    "definition": "Major flooding: extensive inundation of structures and roads, with significant evacuations of people and transfer of property to higher elevations."
+   }
+  ]
+ },
+ "mllw_translation_datum": {
+  "definition": "Mean Lower Low Water: the average of the lower of each day’s two low tides over the National Tidal Datum Epoch (1983–2001). The gray MLLW line in Figure 1 marks where the MLLW zero (the chart datum used on nautical charts and in tide tables) sits on the NAVD88 scale, labeled with its NAVD88 elevation.",
+  "source": "For most NOAA-operated tide gauges the MLLW–NAVD88 separation is NOAA’s published value for that station. USGS, VDEM and StormSense sensors natively report live water levels in NAVD88 only, so their MLLW translation datum is derived from NOAA VDatum.",
+  "vdatum": "https://vdatum.noaa.gov/vdatumweb/"
+ },
+ "companion_pdf": "stormsense-metadata-for-30day-csv-data-NAVD.pdf"
+}
