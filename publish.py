@@ -70,6 +70,9 @@ def fetch(raw):
         os.makedirs(os.path.join(raw, prod), exist_ok=True)
         try:
             data = get(TIDEWATCH_URL + n)
+            if n.endswith("_hc.html") and b"var data = " not in data:  # web4 sometimes serves a partial page
+                time.sleep(5)
+                data = get(TIDEWATCH_URL + n)
         except Exception as e:
             failed.append(f"{n}: {e}")
             continue

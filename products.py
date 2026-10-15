@@ -36,6 +36,9 @@ RENAME = {"Astronomic (m30)": "Astronomic Tide", "Astronomic (m30) Forecast": "A
 def read_page(path):
     html = open(path, encoding="utf-8").read()
     m = DATA.search(html)
+    if not m:  # a truncated or empty Tidewatch page: leave it as it is
+        print(f"  no chart data in {os.path.basename(path)}")
+        return html, []
     js = UTC.sub(lambda u: str(int(datetime(int(u[1]), int(u[2]) + 1, int(u[3]), int(u[4]), int(u[5]), int(u[6]),
                                             tzinfo=timezone.utc).timestamp() * 1000)), m.group(1))
     return html, json.loads(js)
