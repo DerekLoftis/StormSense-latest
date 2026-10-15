@@ -200,8 +200,8 @@ def place(raw, site, updated="", petss_stations=()):
         os.makedirs(os.path.join(site, prod), exist_ok=True)
         for n in sorted(os.listdir(src)):
             m = NAME.match(n)
-            if not m or DROP.match(n):
-                continue
+            if not m or DROP.match(n) or os.path.getsize(os.path.join(src, n)) == 0:
+                continue  # retired station, or an empty file from web4
             st, _, datum, kind = m.groups()
             if datum == "NAVD" and kind == "_hc.html" and os.path.exists(os.path.join(src, n.replace("_NAVD_hc", "_hc"))):
                 continue  # stale 30d page; the current NAVD page has no datum in its name
