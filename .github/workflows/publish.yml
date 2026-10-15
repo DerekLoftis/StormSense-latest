@@ -31,7 +31,17 @@ jobs:
           python-version: "3.12"
       - run: pip install -r styler/requirements.txt
       - name: Fetch, style and lay out the pages
-        run: python publish.py site work 2>&1 | tee build_log.txt; cp build_log.txt site/
+        run: |
+          set -o pipefail
+          python publish.py site work 2>&1 | tee build_log.txt
+      - name: Keep the build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build_log.txt
+          retention-days: 7
+      - run: cp build_log.txt site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
