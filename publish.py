@@ -33,6 +33,7 @@ UA = {"User-Agent": "stormsense-latest (VIMS)"}
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import petss  # noqa: E402
+import noaa_override  # noqa: E402
 import products  # noqa: E402
 # Tidewatch product -> StormSense name
 PRODUCTS = {"f36": "fore72", "3d": "7day", "30d": "30day"}
@@ -240,6 +241,8 @@ def main(site="site", work="work"):
     shutil.rmtree(work, ignore_errors=True)
     os.makedirs(work)
     failed = fetch(raw)
+    # CBBT, MNPT, DAHL, WADC: observations straight from NOAA CO-OPS (Tidewatch's are stale or aliased)
+    noaa_notes = noaa_override.apply({p: os.path.join(raw, p) for p in PRODUCTS}, os.path.join(raw, "f36"))
     pet = transform(raw)
     thresholds = refresh_thresholds(work)
     style(raw, work, thresholds)
@@ -254,7 +257,7 @@ def main(site="site", work="work"):
     shutil.copytree(os.path.join(HERE, "metadata"), os.path.join(site, "metadata"), dirs_exist_ok=True)
     write_index(site, stations, json.load(open(thresholds)), now)
     with open(os.path.join(site, "latest.json"), "w") as f:
-        json.dump({"updated": now, "source": TIDEWATCH_URL, "files": sum(len(v) for v in stations.values()), "petss": pet,
+        json.dump({"updated": now, "source": TIDEWATCH_URL, "files": sum(len(v) for v in stations.values()), "petss": pet, "noaa_observations": noaa_notes,
                    "failed": failed}, f, indent=1)
     open(os.path.join(site, ".nojekyll"), "w").close()
     print(f"{sum(len(v) for v in stations.values())} files for {len(stations)} stations; {len(failed)} failed")
