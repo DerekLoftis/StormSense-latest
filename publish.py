@@ -39,8 +39,8 @@ import products  # noqa: E402
 PRODUCTS = {"f36": "fore72", "3d": "7day", "30d": "30day"}
 LABELS = {"fore72": "72-hour forecast", "7day": "7-day observations", "30day": "30-day observations"}
 # The Tidewatch NAVD chart page has no datum in its name (SWPT_2018_f36_hc.html).
-NAME = re.compile(r"^([A-Z0-9]+)_\d{4}_(f36|3d|30d)(?:_(MLLW|NAVD))?(_hc\.html|\.csv)$")
-PICKLE = re.compile(r"^[A-Z0-9]+_\d{4}_f36\.pypickle$")
+NAME = re.compile(r"^([A-Z0-9-]+)_\d{4}_(f36|3d|30d)(?:_(MLLW|NAVD))?(_hc\.html|\.csv)$")
+PICKLE = re.compile(r"^[A-Z0-9-]+_\d{4}_f36\.pypickle$")
 # Retired or unusable Tidewatch stations, left out of StormSense (Derek, 2026-10-15): NN01-NN10 and
 # VB01-VB10 have not updated in over a year; USNW, USPF and USSV are non-tidal or lack needed data.
 DROP = re.compile(r"^(NN\d\d|VB\d\d|USNW|USPF|USSV)_")

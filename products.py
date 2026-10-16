@@ -118,7 +118,7 @@ def fore72(raw, lids, pet, cycle):
     done, adjs = [], {}
     offs = {n.split("_")[0]: offset(d, n.split("_")[0]) for n in os.listdir(d) if n.endswith("_f36_NAVD.csv")}
     for name in sorted(os.listdir(d)):
-        m = re.match(r"^([A-Z0-9]+)_2018_f36_(MLLW|NAVD)\.csv$", name)
+        m = re.match(r"^([A-Z0-9-]+)_2018_f36_(MLLW|NAVD)\.csv$", name)
         if not m:
             continue
         st, datum = m.groups()
@@ -211,7 +211,7 @@ def seven_day(raw):
         other = os.path.join(d30, name.replace("_3d_", "_30d_"))
         if not os.path.exists(other):
             continue
-        if re.match(r"^[A-Z0-9]+_2018_3d_(MLLW|NAVD)\.csv$", name):
+        if re.match(r"^[A-Z0-9-]+_2018_3d_(MLLW|NAVD)\.csv$", name):
             _, a = read_csv(other)
             head, b = read_csv(os.path.join(d3, name))
             rows = {r[0]: r for r in a}
@@ -246,7 +246,7 @@ def hindcasts(raw, tides, offs):
         if not os.path.isdir(d):
             continue
         for name in sorted(os.listdir(d)):
-            m = re.match(r"^([A-Z0-9]+)_2018_%s_(?:(MLLW|NAVD)\.csv|(MLLW_)?hc\.html|NAVD_hc\.html)$" % prod, name)
+            m = re.match(r"^([A-Z0-9-]+)_2018_%s_(?:(MLLW|NAVD)\.csv|(MLLW_)?hc\.html|NAVD_hc\.html)$" % prod, name)
             if not m:
                 continue
             st = m.group(1)
