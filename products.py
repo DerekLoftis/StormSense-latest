@@ -196,7 +196,7 @@ def petss_page(page, st_pet, f, shift, st):
          "dashStyle": "dash"},
         {"data": pts(tt, f["residual"]), "type": "line", "color": "green", "name": "Residual", "dashStyle": "dash"},
     ]
-    write_page(page, html, new, title=f"72 Hour StormSense Forecast for {st}", guidance=GUIDANCE["petss"])
+    write_page(page, html, new, title=f"72 Hour StormSense Forecast for {st}", guidance=st_pet.get("guidance", GUIDANCE["petss"]))
 
 
 # --- hindcasts ---------------------------------------------------------------

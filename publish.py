@@ -126,6 +126,12 @@ def transform(raw):
         print(f"P-ETSS {cycle:%Y-%m-%d %HZ}: {len(pet)} NWS gauges")
         oc, older = petss.oldest_csv(cycle)
         series = petss.tide_series([older, a])
+        # VIMS gauges P-ETSS doesn't forecast (BRDH): a nearby station's surge on their own tide
+        proxy, proxy_tide = noaa_override.petss_proxies(pet)
+        for st, d in proxy.items():
+            lids[st], pet[st], series[st] = st, d, proxy_tide[st]
+        if proxy:
+            print("P-ETSS proxies:", ", ".join(sorted(proxy)))
         print(f"P-ETSS tide back to the {oc:%Y-%m-%d %HZ} cycle's hindcast" if oc else "P-ETSS: no older cycle")
     except Exception as e:
         print("P-ETSS unavailable:", e)
