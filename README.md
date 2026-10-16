@@ -47,3 +47,11 @@ are moved to NAVD88 with Tidewatch's own MLLW-NAVD88 offset for the station.
 
 Disclaimer: StormSense(TM) Predictive Plots are computer-generated operational
 storm tide forecasts; the user assumes any and all risk.
+
+## Forecast guidance switch
+
+`guidance.json` chooses what drives fore72. It is set to `"mode": "override"` with
+`"override": "petss"`: P-ETSS at every station, for consistency. Each fore72 chart
+names its guidance under the disclaimer, as does the `source` field of each JSON file.
+When the adaptive selection from the StormSense ensemble goes live, set `"mode": "adaptive"`
+(until then any other setting falls back to the P-ETSS override, with a note in the build log).

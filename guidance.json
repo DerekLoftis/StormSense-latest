@@ -1,0 +1,5 @@
+{
+ "_about": "Which forecast guidance drives the primary StormSense fore72 product. mode 'override' uses the named source at every station; mode 'adaptive' (not live yet) will take each station's pick from the StormSense ensemble. Set mode to 'adaptive' when the adaptive selection goes live.",
+ "mode": "override",
+ "override": "petss"
+}

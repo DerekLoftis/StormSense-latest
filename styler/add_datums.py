@@ -224,7 +224,9 @@ def main(argv):
                 var xa = chart.xAxis[0];
                 chart.update({chart: {marginBottom: null}}, false);
                 xa.setTitle({text: xa.options.title.text + '<br/><span style="font-size:10px;color:#6f6f6f">' +
-                             cfg.disclaimer + '</span>'});
+                             cfg.disclaimer + '</span>' +
+                             (window.ssGuidance ? '<br/><span style="font-size:10px;color:#14285a">' +
+                              window.ssGuidance + '</span>' : '')});
 
                 if (cfg.note) {  // data caveat as a subtitle
                     chart.setTitle(null, {text: cfg.note, style: {color: '#a05a00', fontSize: '11px'}});

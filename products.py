@@ -44,7 +44,16 @@ def read_page(path):
     return html, json.loads(js)
 
 
-def write_page(path, html, series, title=None):
+# Guidance line drawn under the disclaimer on fore72 charts (publish.py may replace these).
+GUIDANCE = {"petss": "Forecast guidance: NWS P-ETSS ensemble mean (fixed P-ETSS override at all stations)",
+            "tidewatch": "Forecast guidance: VIMS Tidewatch 36-hour forecast (no P-ETSS point for this station)"}
+GUIDE = re.compile(r"<script>var ssGuidance = .*?;</script>\n?")
+
+
+def write_page(path, html, series, title=None, guidance=None):
+    if guidance:  # read by the styler, which writes it under the disclaimer
+        html = GUIDE.sub("", html).replace("</head>", "<script>var ssGuidance = %s;</script>\n</head>"
+                                           % json.dumps(guidance), 1)
     html = DATA.sub(lambda m: "var data = " + json.dumps(series, separators=(",", ":")) + ";\n", html, count=1)
     if title:
         html = re.sub(r'("title": \{"text": ")[^"]*(")', lambda m: m.group(1) + title + m.group(2), html, count=1)
@@ -151,7 +160,7 @@ def fore72(raw, lids, pet, cycle):
         write_csv(os.path.join(d, name), F72_HEAD, out)
         if os.path.exists(page):
             html, series = read_page(page)
-            write_page(page, html, rename_series(series))
+            write_page(page, html, rename_series(series), guidance=GUIDANCE["tidewatch"])
     return done, adjs, offs
 
 
@@ -187,7 +196,7 @@ def petss_page(page, st_pet, f, shift, st):
          "dashStyle": "dash"},
         {"data": pts(tt, f["residual"]), "type": "line", "color": "green", "name": "Residual", "dashStyle": "dash"},
     ]
-    write_page(page, html, new, title=f"72 Hour StormSense Forecast for {st}")
+    write_page(page, html, new, title=f"72 Hour StormSense Forecast for {st}", guidance=GUIDANCE["petss"])
 
 
 # --- hindcasts ---------------------------------------------------------------

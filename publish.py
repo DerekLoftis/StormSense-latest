@@ -105,8 +105,18 @@ def coops_tide(nos_id, days=32):
             for p in js.get("predictions", [])}
 
 
+def guidance():
+    """The guidance setting in guidance.json. Only the P-ETSS override exists so far; 'adaptive'
+    will read each station's pick from the StormSense ensemble once that goes live."""
+    g = json.load(open(os.path.join(HERE, "guidance.json")))
+    if g.get("mode") != "override" or g.get("override") != "petss":
+        print(f"guidance {g.get('mode')}/{g.get('override')} is not available yet; using the P-ETSS override")
+    return {"mode": "override", "source": "petss"}
+
+
 def transform(raw):
     """Build the StormSense products from the Tidewatch files and P-ETSS (see products.py)."""
+    guide = guidance()
     lids = {r["tidewatch_id"]: r["nws_lid"] for r in csv.DictReader(open(os.path.join(HERE, "stations_nws.csv")))}
     pet, cycle, older = {}, None, None
     try:
@@ -140,7 +150,7 @@ def transform(raw):
         tides[st] = {products.ms(t): v + adj for t, v in tide.items()}
     print(f"astronomic tide for hindcasts: {len(tides)} stations (CO-OPS for {', '.join(coops) or 'none'})")
     print(f"hindcast charts with tide and residual: {products.hindcasts(raw, tides, offs)}")
-    return {"cycle": cycle.strftime("%Y-%m-%dT%HZ") if cycle else None,
+    return {"guidance": guide, "cycle": cycle.strftime("%Y-%m-%dT%HZ") if cycle else None,
             "stations": sorted({d.split()[0] for d in done}),
             "hindcast_tide": sorted(tides), "coops_tide": coops,
             "alignment_ft": {k: round(v, 3) for k, v in adjs.items()}}
@@ -215,8 +225,8 @@ def place(raw, site, updated="", petss_stations=()):
             stations.setdefault(st, {})[(prod, datum, ext)] = f"{prod}/{new}"
             if ext == ".csv":
                 if prod == "fore72":
-                    source = ("NWS P-ETSS" if st in petss_stations else "VIMS Tidewatch 36-hour forecast "
-                              "(no P-ETSS point for this station)")
+                    source = ("NWS P-ETSS (fixed P-ETSS override at all stations)" if st in petss_stations
+                              else "VIMS Tidewatch 36-hour forecast (no P-ETSS point for this station)")
                 else:
                     source = "gauge observations; astronomical tide from NWS P-ETSS and NOAA CO-OPS predictions"
                 write_json(os.path.join(site, prod, new), os.path.join(site, prod, new[:-4] + ".json"),
