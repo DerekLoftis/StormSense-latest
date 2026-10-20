@@ -1,5 +1,5 @@
 {
- "_about": "Which forecast guidance drives the primary StormSense fore72 product. mode 'override' uses the named source at every station; mode 'adaptive' (not live yet) will take each station's pick from the StormSense ensemble. Set mode to 'adaptive' when the adaptive selection goes live.",
- "mode": "override",
+ "_about": "Which forecast guidance drives the primary StormSense fore72 product. mode 'adaptive' takes each station's pick per lead band (0-12, 12-36, 36-72 h) from the StormSense Ensemble's skill scoring (https://derekloftis.github.io/StormSense-ensemble/skill/pick.json); the pick stays on P-ETSS until a week of verified runs exists, and P-ETSS is used whenever the pick is unavailable or more than 18 hours old. mode 'override' uses the named source ('petss') at every station.",
+ "mode": "adaptive",
  "override": "petss"
 }

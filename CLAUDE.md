@@ -38,8 +38,11 @@ GitHub cron starts late or skips sometimes; there is no fallback. Pages source i
   `date_time_z, water_level_ft, astro_tide_ft, residual_ft`. Every CSV has a .json twin (metadata header
   + records, null for blanks). Metadata PDFs + JSON in `metadata/` (tools/make_metadata.py; Liberation
   Sans). Derek said to stop tweaking the PDFs.
-- `guidance.json` picks fore72's guidance: `"mode": "override", "override": "petss"` (Derek's ask until
-  adaptive selection is live). Each chart names its guidance under the disclaimer and in JSON `source`.
+- `guidance.json` picks fore72's guidance: `"mode": "adaptive"` (Derek, 2026-10-20: turn phase 2 on once there
+  is enough history) reads the ensemble's `skill/pick.json` from its Pages site and, per station and lead band,
+  follows the picked member's published ens72 series (eased over 1 h at band edges; P-ETSS cone and surge shifted
+  with it). Pick older than 18 h, unreachable, or not ready: P-ETSS. `"mode": "override", "override": "petss"`
+  forces P-ETSS. Each chart names its guidance under the disclaimer and in JSON `source`.
 - Flood thresholds: `make_thresholds.py` from the NWPS gauge API (`stations_nws.csv`), fallback
   `thresholds.json`. Colors Action #FFFF00, Minor #FF9900, Moderate #FF0000, Major #CC33FF.
 - web4 sometimes serves empty/partial pages; publish retries and skips them. `build_log.txt` is
@@ -54,10 +57,15 @@ GitHub cron starts late or skips sometimes; there is no fallback. Pages source i
   P-Surge e50 (17 stations, only while NHC advisories are out). Details: README.md, NEW_MEMBERS.md.
 - Alignment: median(obs - member) over the last 24 h of overlap (>=30 six-minute obs), newest run with the
   previous one stitched in front. NWS and Tidewatch are not shifted.
-- Design and phases: `handoff/ensemble_design.md`. Phase 1 (StormSense-ensemble) is live. Phase 2 (skill-based pick
-  per station and lead band 0-12/12-36/36-72 h, switch only after another member wins two updates in a
-  row, one line in StormSense-latest `guidance.json`) needs about a week of ensemble archive (from
-  ~2026-10-23). Phase 3: regime rules (QPF/rivers, NHC advisories, nor'easter winds). Phase 4: analog and
+- Design and phases: `handoff/ensemble_design.md`. Phase 1 (StormSense-ensemble) is live. Phase 2 is built:
+  `skill.py` (step in ensemble.yml, continue-on-error) scores every archived run x station x member x lead band
+  (0-12/12-36/36-72, plus 0-36/0-72) with Derek's formula against observed_ft stitched across the archived runs,
+  once the band has passed (>=85% coverage); cumulative `skill_scores.csv.gz` + `skill_runs.csv` ride on the
+  month's `ensemble-YYYY-MM` release; Pages `skill/` has index.html, scores.csv (31 d), summary.csv/json
+  (10-day recent skill, e-folding 3 d), pick.json, picks_history.csv. Pick: best recent skill, must lead by
+  0.01 for 2 updates running; P-ETSS until 7 days of verified runs and >=12 scores (ready ~10-23 for 0-12 h,
+  ~10-26 for 36-72 h). Never picked: tidewatch, baseline, tide; stations USSC USAR USCB USNR USSB GS01 USBB
+  (another gauge's obs). Phase 3: regime rules (QPF/rivers, NHC advisories, nor'easter winds). Phase 4: analog and
   learned weights from the archive and AWS/IEM backfills.
 
 ## Station sources that are not Tidewatch (in both StormSense repos and tidewatch_latest)
@@ -105,7 +113,9 @@ copies in step (tidewatch_latest stays with the Tidewatch project).
   merge MAE/RMSE and weight R² least; don't change the formula without him.
 - Known results: Sept 2026 36-h RMSE NWS 0.24 vs Tidewatch 0.28 ft (NWS better at 10 of 11; nor'easter
   0.29 vs 0.52). King tide 8-12 Oct 2026: NWS 0.21, Tidewatch 0.26, STOFS-2D 0.18 (vs TW 0.22), CBOFS 0.25,
-  STOFS-3D 0.31 (bias -0.25), NWM 0.73. P-ETSS not yet verified against obs: an early task here.
+  STOFS-3D 0.31 (bias -0.25), NWM 0.73. First ensemble scores (runs 16-18 Oct 2026, ~1.5 ft surge event,
+  mean over stations): 0-12 h RMSE ETSS 0.24, Tidewatch 0.25, STOFS-2D 0.27, P-ETSS 0.32 ft; 36-72 h STOFS-3D
+  0.65, STOFS-2D 0.70, P-ETSS 0.86 ft (bias +0.77, everyone high); P-ETSS 10-90% cone held 33% of obs at 0-12 h.
 - Event look-backs use Derek's deck format (`handoff/notes/flood-event-validation-format.md`): pptx with
   autoplay mp4 per forecast, station stats table first, ROYGBIV forecast colors, halo-labelled composite.
 
@@ -138,7 +148,7 @@ copies in step (tidewatch_latest stays with the Tidewatch project).
    00/06/12/18) downloads the just-published public Pages files and uploads to its own releases with
    `github.token`. (Uploading from StormSense-latest instead would need a token secret for the other repo.)
 2. Verify P-ETSS and every ensemble member with the skill code against obs as the archive grows.
-3. Phase 2 adaptive pick (skill per station and lead band, hysteresis) writing `guidance.json`.
+3. Phase 2 adaptive pick (skill per station and lead band, hysteresis): built (skill.py, guidance.json adaptive).
 4. **StormSense's own 72-h forecast**: own harmonic tide per gauge (UTide, as noaa_override.py does),
    own observations (CO-OPS, USGS NWIS, THREDDS, GreenStream, FloodVISION) so web4 is no longer needed,
    and a surge model of StormSense's own, e.g. a skill-weighted blend or a regression/ML correction of
