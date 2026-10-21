@@ -48,6 +48,17 @@ def read_page(path):
 GUIDANCE = {"petss": "Forecast guidance: NWS P-ETSS ensemble mean (fixed P-ETSS override at all stations)",
             "tidewatch": "Forecast guidance: VIMS Tidewatch 36-hour forecast (no P-ETSS point for this station)"}
 GUIDE = re.compile(r"<script>var ssGuidance = .*?;</script>\n?")
+# JSON "source" of a fore72 file
+SOURCE = {"petss": "NWS P-ETSS (fixed P-ETSS override at all stations)"}
+# Members the adaptive pick may choose (StormSense Ensemble keys), as named on the chart
+MEMBER_NAMES = {"petss": "NWS P-ETSS", "stofs2d": "NOAA STOFS-2D-Global", "stofs3d": "NOAA STOFS-3D-Atlantic",
+                "cbofs": "NOAA CBOFS", "nwm_short": "NWM coastal (short range)",
+                "nwm_medium": "NWM coastal (medium range)", "etss": "NWS ETSS", "psurge": "NHC P-Surge (50%)",
+                "nws": "NWS official forecast", "stormsense": "StormSense"}
+BANDS = (("0-12", 0, 12), ("12-36", 12, 36), ("36-72", 36, 72))
+BLEND_STEPS = 11  # 1-hour running mean that eases each change of guidance
+ENS_MAX_AGE = timedelta(hours=18)
+_ens = {}
 
 
 def write_page(path, html, series, title=None, guidance=None):
@@ -112,10 +123,74 @@ def offset(f36_dir, st):
 
 
 # --- fore72 ------------------------------------------------------------------
-def fore72(raw, lids, pet, cycle):
-    """Rewrite raw/f36 pages and CSVs. lids: {ST: NWS id}; pet: {NWS id: P-ETSS station}."""
+def ensemble_series(url, st):
+    """{epoch ms: {member: ft MLLW}} from the StormSense Ensemble's published ens72 JSON, or None."""
+    if st not in _ens:
+        _ens[st] = None
+        try:
+            import urllib.request
+            req = urllib.request.Request(f"{url}ens72/{st}_ens72_MLLW.json", headers={"User-Agent": "stormsense-latest (VIMS)"})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                doc = json.loads(r.read())
+            age = datetime.now(timezone.utc) - datetime.strptime(doc["updated"], "%Y-%m-%d %H:%M UTC").replace(tzinfo=timezone.utc)
+            if age > ENS_MAX_AGE:
+                raise ValueError(f"ensemble file is {age} old")
+            _ens[st] = {ms(parse_t(r["date_time_z"])): r for r in doc["data"]}
+        except Exception as e:
+            print(f"  {st}: ensemble series unavailable ({e}); P-ETSS kept")
+    return _ens[st]
+
+
+def adapt(f, st, guide, base=None):
+    """Phase 2 adaptive guidance. Where the ensemble's skill pick for this station and lead band
+    (hours after t0) is another member, the forecast follows that member as published on the
+    ensemble chart (the series that was scored); the change from P-ETSS is eased over an hour at
+    each band edge, and the P-ETSS cone and surge move with it. base: the station's P-ETSS
+    guidance line. Returns (f, chart line, JSON source)."""
+    base = base or GUIDANCE["petss"]
+    if guide.get("mode") != "adaptive":
+        return f, base, SOURCE["petss"]
+    picks = guide["pick"].get("stations", {}).get(st, {})
+    ready = [b for b, _, _ in BANDS if picks.get(b, {}).get("ready")]
+    chosen = {b: picks[b]["member"] for b in ready if picks[b]["member"] != "petss" and picks[b]["member"] in MEMBER_NAMES}
+    why = "best recent skill" if ready else "until a week of skill history exists"
+    plain = ((f"Forecast guidance: NWS P-ETSS ensemble mean (adaptive pick: {why})" if base == GUIDANCE["petss"]
+              else f"{base}; adaptive pick: P-ETSS {why}"), f"NWS P-ETSS (adaptive pick: {why})")
+    if not chosen:
+        return f, *plain
+    ens = ensemble_series(guide["ensemble_url"], st)
+    if not ens:
+        return f, *plain
+    lead = np.array([(t - f["time"][0]).total_seconds() / 3600 for t in f["time"]])
+    delta = np.zeros(len(lead))
+    used = {}
+    for band, lo, hi in BANDS:
+        m = chosen.get(band)
+        if not m:
+            continue
+        for i in np.where((lead > lo if lo else lead >= lo) & (lead <= hi))[0]:
+            v = ens.get(ms(f["time"][i]), {}).get(f"{m}_ft")
+            if v is not None and not np.isnan(f["SSforecast"][i]):
+                delta[i] = v - f["SSforecast"][i]
+                used.setdefault(band, m)
+    if not used:
+        return f, *plain
+    k = np.ones(BLEND_STEPS)
+    delta = np.convolve(delta, k, "same") / np.convolve(np.ones(len(delta)), k, "same")
+    for key in ("SSforecast", "low", "high", "surge", "surge_low", "surge_high"):
+        f[key] = f[key] + delta
+    f["residual"] = f["SSforecast"] - f["astro_tide"]
+    parts = ", ".join(f"{MEMBER_NAMES[used.get(b, 'petss')]} {b} h" for b, _, _ in BANDS)
+    return (f, f"Forecast guidance: {parts} (adaptive pick by recent skill; shaded cone: P-ETSS 10-90% spread)",
+            f"adaptive pick by recent skill: {parts}; cone and surge: NWS P-ETSS shifted to the picked forecast")
+
+
+def fore72(raw, lids, pet, cycle, guide=None):
+    """Rewrite raw/f36 pages and CSVs. lids: {ST: NWS id}; pet: {NWS id: P-ETSS station};
+    guide: publish.guidance(). Returns (done, alignments, MLLW-NAVD offsets, JSON sources)."""
+    guide = guide or {"mode": "override"}
     d = os.path.join(raw, "f36")
-    done, adjs = [], {}
+    done, adjs, sources = [], {}, {}
     offs = {n.split("_")[0]: offset(d, n.split("_")[0]) for n in os.listdir(d) if n.endswith("_f36_NAVD.csv")}
     for name in sorted(os.listdir(d)):
         m = re.match(r"^([A-Z0-9-]+)_2018_f36_(MLLW|NAVD)\.csv$", name)
@@ -145,11 +220,12 @@ def fore72(raw, lids, pet, cycle):
                 if datum == "MLLW":
                     print(f"  {st}: P-ETSS aligned by {adj:+.2f} ft")
             if f is not None:
+                f, line, sources[st] = adapt(f, st, guide, pet[lid].get("guidance"))
                 out = [[iso(t)] + [fmt(f[k][i] + (shift if k in LEVELS else 0)) for k in F72_KEYS]
                        for i, t in enumerate(f["time"])]
                 write_csv(os.path.join(d, name), F72_HEAD, out)
                 if os.path.exists(page):
-                    petss_page(page, pet[lid], f, shift, st)
+                    petss_page(page, pet[lid], f, shift, st, line)
                 done.append(f"{st} {datum}")
                 continue
         # no P-ETSS here: Tidewatch's 36-hour forecast under the new field names
@@ -161,7 +237,7 @@ def fore72(raw, lids, pet, cycle):
         if os.path.exists(page):
             html, series = read_page(page)
             write_page(page, html, rename_series(series), guidance=GUIDANCE["tidewatch"])
-    return done, adjs, offs
+    return done, adjs, offs, sources
 
 
 def align(st_pet, mllw_page, t0):
@@ -172,7 +248,7 @@ def align(st_pet, mllw_page, t0):
     return float(np.median(gaps)) if len(gaps) >= 6 else 0.0
 
 
-def petss_page(page, st_pet, f, shift, st):
+def petss_page(page, st_pet, f, shift, st, line=None):
     """Hindcast: Tidewatch's observations against the P-ETSS tide. Forecast: P-ETSS."""
     html, series = read_page(page)
     obs = next((s for s in series if s["name"] == "Observed"), None)
@@ -196,7 +272,7 @@ def petss_page(page, st_pet, f, shift, st):
          "dashStyle": "dash"},
         {"data": pts(tt, f["residual"]), "type": "line", "color": "green", "name": "Residual", "dashStyle": "dash"},
     ]
-    write_page(page, html, new, title=f"72 Hour StormSense Forecast for {st}", guidance=st_pet.get("guidance", GUIDANCE["petss"]))
+    write_page(page, html, new, title=f"72 Hour StormSense Forecast for {st}", guidance=line or st_pet.get("guidance", GUIDANCE["petss"]))
 
 
 # --- hindcasts ---------------------------------------------------------------

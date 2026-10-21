@@ -77,6 +77,9 @@ def fetch(raw):
         except Exception as e:
             failed.append(f"{n}: {e}")
             continue
+        if not data:  # web4 sometimes serves an empty file; leave it out rather than break the build
+            failed.append(f"{n}: empty")
+            continue
         with open(os.path.join(raw, prod, n), "wb") as f:
             f.write(data)
     return failed
@@ -106,12 +109,27 @@ def coops_tide(nos_id, days=32):
             for p in js.get("predictions", [])}
 
 
+ENSEMBLE_URL = os.environ.get("ENSEMBLE_URL", "https://derekloftis.github.io/StormSense-ensemble/")
+PICK_MAX_AGE = timedelta(hours=18)  # an older pick (ensemble runs stopped) falls back to P-ETSS
+
+
 def guidance():
-    """The guidance setting in guidance.json. Only the P-ETSS override exists so far; 'adaptive'
-    will read each station's pick from the StormSense ensemble once that goes live."""
+    """The guidance setting in guidance.json. 'override' with 'petss' uses P-ETSS everywhere;
+    'adaptive' reads each station's pick per lead band from the StormSense Ensemble's skill
+    scoring (skill/pick.json), which stays on P-ETSS until there is enough skill history."""
     g = json.load(open(os.path.join(HERE, "guidance.json")))
-    if g.get("mode") != "override" or g.get("override") != "petss":
-        print(f"guidance {g.get('mode')}/{g.get('override')} is not available yet; using the P-ETSS override")
+    if g.get("mode") == "adaptive":
+        try:
+            pick = json.loads(get(ENSEMBLE_URL + "skill/pick.json"))
+            age = datetime.now(timezone.utc) - datetime.strptime(pick["updated"], "%Y-%m-%d %H:%M UTC").replace(tzinfo=timezone.utc)
+            if age > PICK_MAX_AGE:
+                raise ValueError(f"pick is {age} old")
+            print(f"guidance: adaptive pick of {pick['updated']}, ready at {len(pick.get('ready_stations', []))} stations")
+            return {"mode": "adaptive", "source": "petss", "pick": pick, "ensemble_url": ENSEMBLE_URL}
+        except Exception as e:
+            print(f"guidance: adaptive pick unavailable ({e}); using P-ETSS")
+    elif g.get("mode") != "override" or g.get("override") != "petss":
+        print(f"guidance {g.get('mode')}/{g.get('override')} is not available; using the P-ETSS override")
     return {"mode": "override", "source": "petss"}
 
 
@@ -136,8 +154,11 @@ def transform(raw):
     except Exception as e:
         print("P-ETSS unavailable:", e)
         series = {}
-    done, adjs, offs = products.fore72(raw, lids, pet, cycle)
+    done, adjs, offs, sources = products.fore72(raw, lids, pet, cycle, guide)
     print(f"fore72 from P-ETSS: {len(done)} files ({', '.join(done)})")
+    for st, s in sorted(sources.items()):
+        if s != products.SOURCE["petss"]:
+            print(f"  {st}: {s}")
     print(f"7day: {products.seven_day(raw)} pages")
     tides, coops = {}, []
     for st, adj in adjs.items():
@@ -157,7 +178,9 @@ def transform(raw):
         tides[st] = {products.ms(t): v + adj for t, v in tide.items()}
     print(f"astronomic tide for hindcasts: {len(tides)} stations (CO-OPS for {', '.join(coops) or 'none'})")
     print(f"hindcast charts with tide and residual: {products.hindcasts(raw, tides, offs)}")
-    return {"guidance": guide, "cycle": cycle.strftime("%Y-%m-%dT%HZ") if cycle else None,
+    guide = {k: v for k, v in guide.items() if k != "pick"} | (
+        {"pick_updated": guide["pick"]["updated"], "rule": guide["pick"].get("rule")} if "pick" in guide else {})
+    return {"guidance": guide, "sources": sources, "cycle": cycle.strftime("%Y-%m-%dT%HZ") if cycle else None,
             "stations": sorted({d.split()[0] for d in done}),
             "hindcast_tide": sorted(tides), "coops_tide": coops,
             "alignment_ft": {k: round(v, 3) for k, v in adjs.items()}}
@@ -206,7 +229,7 @@ def write_json(csv_path, out, st, prod, datum, updated, source):
         json.dump(doc, f, separators=(",", ":"))
 
 
-def place(raw, site, updated="", petss_stations=()):
+def place(raw, site, updated="", sources=None):
     """Copy raw/<tidewatch product>/ into site/<StormSense product>/ under the new names,
     with a JSON copy of each CSV."""
     stations = {}
@@ -232,8 +255,7 @@ def place(raw, site, updated="", petss_stations=()):
             stations.setdefault(st, {})[(prod, datum, ext)] = f"{prod}/{new}"
             if ext == ".csv":
                 if prod == "fore72":
-                    source = ("NWS P-ETSS (fixed P-ETSS override at all stations)" if st in petss_stations
-                              else "VIMS Tidewatch 36-hour forecast (no P-ETSS point for this station)")
+                    source = (sources or {}).get(st, "VIMS Tidewatch 36-hour forecast (no P-ETSS point for this station)")
                 else:
                     source = "gauge observations; astronomical tide from NWS P-ETSS and NOAA CO-OPS predictions"
                 write_json(os.path.join(site, prod, new), os.path.join(site, prod, new[:-4] + ".json"),
@@ -253,7 +275,7 @@ def main(site="site", work="work"):
     thresholds = refresh_thresholds(work)
     style(raw, work, thresholds)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    stations = place(raw, site, now, set(pet.get("stations", ())))
+    stations = place(raw, site, now, pet.get("sources", {}))
     os.makedirs(os.path.join(site, "jslib"), exist_ok=True)
     for f in os.listdir(os.path.join(HERE, "styler", "jslib")):
         shutil.copy(os.path.join(HERE, "styler", "jslib", f), os.path.join(site, "jslib", f))
@@ -310,7 +332,10 @@ update at about {SCHEDULE}.</p>
 <p class="disc">Disclaimer: StormSense&trade; Predictive Plots are computer-generated operational storm tide
 forecasts; the user assumes any and all risk.</p>
 <p class="disc">Forecasts come from the NWS Probabilistic Extra-Tropical Storm Surge model (P-ETSS),
-interpolated to 6 minutes; the shaded cone is its 10%&ndash;90% range. Stations without a P-ETSS point
+interpolated to 6 minutes; the shaded cone is its 10%&ndash;90% range. Where the
+<a href="https://derekloftis.github.io/StormSense-ensemble/skill/">StormSense Ensemble's skill scores</a> show that
+another forecast has been clearly better at a station and lead time over the past week, the forecast follows that one
+for those hours; each chart names its guidance below the disclaimer. Stations without a P-ETSS point
 show Tidewatch's 36-hour forecast for now.</p>
 <p class="disc">NAVD88 charts show the NWS flood categories (Action, Minor, Moderate, Major) from the
 National Water Prediction Service and the MLLW line; MLLW charts show the tidal datums. Click a line's label
