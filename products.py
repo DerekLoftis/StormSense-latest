@@ -78,7 +78,7 @@ def pts(times, vals):
 def read_csv(path):
     with open(path, newline="") as f:
         rows = list(csv.reader(f))
-    return rows[0], rows[1:]
+    return (rows[0], rows[1:]) if rows else ([], [])  # web4 sometimes serves an empty file
 
 
 def write_csv(path, head, rows):
@@ -214,6 +214,8 @@ def seven_day(raw):
         if re.match(r"^[A-Z0-9-]+_2018_3d_(MLLW|NAVD)\.csv$", name):
             _, a = read_csv(other)
             head, b = read_csv(os.path.join(d3, name))
+            if not head:
+                continue
             rows = {r[0]: r for r in a}
             rows.update({r[0]: r for r in b})
             if rows:

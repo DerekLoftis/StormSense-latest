@@ -19,10 +19,11 @@ disclosures) is in the private repo DerekLoftis/StormSense-archive under `handof
 
 | Repo | Site | Schedule (UTC) | Archive |
 |---|---|---|---|
-| DerekLoftis/StormSense-latest (public) | https://derekloftis.github.io/StormSense-latest/ | `publish.yml` 00:20/06:20/12:20/18:20 | none yet (fixed paths, overwritten) |
+| DerekLoftis/StormSense-latest (public) | https://derekloftis.github.io/StormSense-latest/ | `publish.yml` 00:20/06:20/12:20/18:20 | every build as `stormsense_<build time>.tar.xz` on release `stormsense-YYYY-MM` in private StormSense-archive (its `archive-latest.yml`, hourly) |
 | DerekLoftis/StormSense-ensemble (public) | https://derekloftis.github.io/StormSense-ensemble/ | `ensemble.yml` 00:40/06:40/12:40/18:40 | one `ensemble_<cycle>.tar.gz` per run on release `ensemble-YYYY-MM` (since 2026-10-16) |
 
-GitHub cron starts late or skips sometimes; there is no fallback. Pages source is "GitHub Actions".
+GitHub cron starts late or skips sometimes; there is no fallback. publish.yml runs have started 1-5 h late
+(the 06:20 run of 2026-10-20 started 11:49) and only ~3 a day land, so the archive checks hourly. Pages source is "GitHub Actions".
 `SCHEDULE` strings in publish.py / ensemble.py must match the workflow cron.
 
 ### StormSense Latest (`publish.py`, `products.py`, `petss.py`, `styler/`)
@@ -132,11 +133,13 @@ copies in step (tidewatch_latest stays with the Tidewatch project).
 
 ## Roadmap for the StormSense project (suggested order)
 
-1. **Archive StormSense Latest** separately from Tidewatch: every cycle's fore72/7day/30day CSV+JSON (and
-   html) as one tarball per cycle on monthly releases `stormsense-YYYY-MM` in DerekLoftis/StormSense-archive,
-   plus an index CSV. Simplest with no secrets: a scheduled workflow in StormSense-archive (e.g. :50 past
-   00/06/12/18) downloads the just-published public Pages files and uploads to its own releases with
-   `github.token`. (Uploading from StormSense-latest instead would need a token secret for the other repo.)
+1. **Archive StormSense Latest** (built 2026-10-20): StormSense-archive `archive-latest.yml` (:50 every
+   hour) reads the public site's latest.json and, for a build not yet in the index, downloads every linked
+   fore72/7day/30day html+csv+json plus index, latest.json, thresholds, build log, metadata JSON and jslib into
+   one `stormsense_<build time>.tar.xz` (~10 MB; manifest.csv inside) on release `stormsense-YYYY-MM`.
+   Index in that repo: `data/index/stormsense-latest/runs_YYYY-MM.csv` (one row per build: slot cycle,
+   P-ETSS cycle, counts, sha256) and `stations_YYYY-MM.csv` (per build/station/product/datum: formats, rows,
+   first/last time, guidance source). Code: `archiver/latest_archive.py`.
 2. Verify P-ETSS and every ensemble member with the skill code against obs as the archive grows.
 3. Phase 2 adaptive pick (skill per station and lead band, hysteresis) writing `guidance.json`.
 4. **StormSense's own 72-h forecast**: own harmonic tide per gauge (UTide, as noaa_override.py does),
@@ -152,6 +155,8 @@ copies in step (tidewatch_latest stays with the Tidewatch project).
 ## Where the history lives
 
 - Ensemble runs since 2026-10-16: StormSense-ensemble's `ensemble-YYYY-MM` releases.
+- StormSense Latest builds (once archive-latest.yml is merged): StormSense-archive's `stormsense-YYYY-MM`
+  releases, indexed in its `data/index/stormsense-latest/`.
 - Tidewatch f36/3d/30d, Classic, NWPS, NWS CFW and STOFS/NWM/CBOFS model files since 16 Sept 2026: private
   DerekLoftis/tidewatch_archive, releases `archive-YYYY-MM` (one tarball per run; index CSVs in the repo
   under `data/index/`), plus `nws-backfill` (IEM NWS HML for Sept 2026, Oct 2025, Oct 2016) and
