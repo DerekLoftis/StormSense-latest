@@ -86,10 +86,19 @@ def pts(times, vals):
 
 
 # --- CSV ---------------------------------------------------------------------
+STAMP = re.compile(r"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$")
+
+
 def read_csv(path):
     with open(path, newline="") as f:
         rows = list(csv.reader(f))
-    return (rows[0], rows[1:]) if rows else ([], [])  # web4 sometimes serves an empty file
+    if not rows:
+        return [], []  # web4 sometimes serves an empty file
+    body = rows[1:]
+    if body and STAMP.match(body[0][0] if body[0] else ""):
+        # ... or one cut off mid-row (e.g. a last line "2026-10-21T20:2"): keep only whole time stamps
+        body = [r for r in body if r and STAMP.match(r[0])]
+    return rows[0], body
 
 
 def write_csv(path, head, rows):
