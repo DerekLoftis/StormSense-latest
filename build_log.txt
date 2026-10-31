@@ -1,0 +1,96 @@
+thresholds: 59 stations with flood categories; 0 gauges failed
+observations: 73 stations; none at 4
+  GS01: no public observation source (GreenStream API needs a key; not fetched yet)
+  GS02: no public observation source (GreenStream API needs a key; not fetched yet)
+  USCB: nwis:01484746: no readings
+  USSC: nwis:01484938: no readings
+petss: run 2026-10-31 12Z, 38 points for 77 stations
+etss: run 2026-10-31 12Z at 11 stations
+stofs2d: run 2026-10-31 06Z at 23 stations
+stofs3d: run 2026-10-30 12Z at 11 stations
+nwm_short: run 2026-10-31 12Z at 43 stations
+nwm_medium: run 2026-10-31 06Z at 43 stations
+cbofs: run 2026-10-31 12Z at 28 stations
+nws: run 2026-10-31 17Z at 36 stations
+psurge: 0 stations
+tidewatch: 36-hour forecasts for 30 stations
+cached scores: 254915 rows, 58 runs; 13338 flood rows
+19 run tarballs to score
+skill: 267127 scores from 59 runs; ready at 29 stations; picks off P-ETSS: {'BISH 0-12': 'nws', 'CNRC 0-12': 'stormsense', 'DAHL 0-12': 'stormsense', 'DAHL 12-36': 'nws', 'DAHL 36-72': 'nws', 'LEWI 12-36': 'nws', 'LEWI 36-72': 'nws', 'USBC 12-36': 'stormsense', 'USBK 0-12': 'stormsense', 'USBK 12-36': 'nwm_medium', 'USBK 36-72': 'nwm_medium', 'USBM 12-36': 'stormsense', 'USFM 0-12': 'stormsense', 'USFM 12-36': 'etss', 'USFM 36-72': 'stofs2d', 'USJT 0-12': 'stofs2d', 'USJT 12-36': 'stofs2d', 'USJT 36-72': 'stofs2d', 'USLB 0-12': 'stormsense', 'USLB 12-36': 'stormsense', 'USLB 36-72': 'nwm_medium', 'USLN 0-12': 'stormsense', 'USLN-X 12-36': 'stormsense', 'USLN-X 36-72': 'stormsense', 'USMB 0-12': 'stormsense', 'USMB 12-36': 'stormsense', 'USNC 12-36': 'nwm_medium', 'USNC 36-72': 'nwm_medium', 'USPA 0-12': 'stormsense', 'USPA 12-36': 'stormsense', 'USPT 0-12': 'nws', 'USPT 12-36': 'nws', 'USSF 0-12': 'stormsense', 'USSF 12-36': 'stormsense', 'USSF 36-72': 'nws', 'USTC 0-12': 'stormsense', 'USTC 12-36': 'stormsense', 'USTC 36-72': 'nwm_medium', 'WADC 0-12': 'etss', 'WADC 12-36': 'nws', 'WADC 36-72': 'nws', 'WMPT 0-12': 'stormsense', 'WMPT 12-36': 'nws', 'WMPT 36-72': 'stofs2d', 'YRCG 0-12': 'stormsense', 'YRCG 12-36': 'nws'}
+corrector: 31 archived runs
+fore72 history: 51 runs
+uncertainty: 1075 verified forecasts
+  ALEV: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  ARPV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  AXTV: 9 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  BBIV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  BISH: 11 members; guidance {'0-12': 'nws', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  BPAD: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  BRDH: 4 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  CBBT: 10 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  CCHV: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  CHIV: 7 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  CNRC: 3 members; guidance {'0-12': 'stormsense', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  CRSM: 7 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  DAHL: 9 members; guidance {'0-12': 'stormsense', '12-36': 'nws', '36-72': 'nws'}; cone own errors
+  DPCV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  ELGV: 4 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  EZMV: 8 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  FEDV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  GTND: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  HPPV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  IHDM: 7 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  JLMV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  JPHV: 4 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  KIPT: 11 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  KMNV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  LCEV: 4 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  LENM: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  LEWI: 11 members; guidance {'0-12': 'petss', '12-36': 'nws', '36-72': 'nws'}; cone own errors
+  LSPV: 7 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  MNPT: 8 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  NRSV: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  ONAV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  PCCV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  PRTV: 7 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  RAPV: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  RDIV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  RICV: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  SAXV: 8 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  SGSM: 8 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  SLIM: 10 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  SLRV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  SMSV: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  SWPT: 11 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  USAR: 5 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  USBB: 4 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  USBC: 4 members; guidance {'0-12': 'petss', '12-36': 'stormsense', '36-72': 'petss'}; cone own errors
+  USBK: 6 members; guidance {'0-12': 'stormsense', '12-36': 'nwm_medium', '36-72': 'nwm_medium'}; cone own errors
+  USBM: 4 members; guidance {'0-12': 'petss', '12-36': 'stormsense', '36-72': 'petss'}; cone own errors
+  USFM: 10 members; guidance {'0-12': 'stormsense', '12-36': 'etss', '36-72': 'stofs2d'}; cone own errors
+  USHR: 7 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  USJT: 9 members; guidance {'0-12': 'stofs2d', '12-36': 'stofs2d', '36-72': 'stofs2d'}; cone own errors
+  USLB: 6 members; guidance {'0-12': 'stormsense', '12-36': 'stormsense', '36-72': 'nwm_medium'}; cone own errors
+  USLI: 8 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  USLN: 6 members; guidance {'0-12': 'stormsense', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  USLN-X: 3 members; guidance {'0-12': 'petss', '12-36': 'stormsense', '36-72': 'stormsense'}; cone own errors
+  USLR: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  USMB: 4 members; guidance {'0-12': 'stormsense', '12-36': 'stormsense', '36-72': 'petss'}; cone own errors
+  USNC: 6 members; guidance {'0-12': 'petss', '12-36': 'nwm_medium', '36-72': 'nwm_medium'}; cone own errors
+  USNR: 8 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  USPA: 4 members; guidance {'0-12': 'stormsense', '12-36': 'stormsense', '36-72': 'petss'}; cone own errors
+  USPT: 7 members; guidance {'0-12': 'nws', '12-36': 'nws', '36-72': 'petss'}; cone own errors
+  USSB: 4 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  USSF: 8 members; guidance {'0-12': 'stormsense', '12-36': 'stormsense', '36-72': 'nws'}; cone own errors
+  USTC: 6 members; guidance {'0-12': 'stormsense', '12-36': 'stormsense', '36-72': 'nwm_medium'}; cone own errors
+  VIMS: 10 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  WACH: 8 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  WADC: 10 members; guidance {'0-12': 'etss', '12-36': 'nws', '36-72': 'nws'}; cone own errors
+  WCKV: 6 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  WMPT: 10 members; guidance {'0-12': 'stormsense', '12-36': 'nws', '36-72': 'stofs2d'}; cone own errors
+  WRDV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  WRSV: 3 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  WRVV: 8 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  WSPV: 4 members; guidance {'0-12': 'petss', '12-36': 'petss', '36-72': 'petss'}; cone own errors
+  YRCG: 11 members; guidance {'0-12': 'stormsense', '12-36': 'nws', '36-72': 'petss'}; cone own errors
+built 73 stations; missing 4; archive ensemble_2026-10-31T18Z.tar.gz (17041 KB)

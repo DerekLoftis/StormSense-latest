@@ -1,0 +1,682 @@
+{
+ "updated": "2026-10-31 18:20 UTC",
+ "cycle": "2026-10-31T18Z",
+ "obs_basis": "stormsense",
+ "runs": {
+  "stofs2d": "2026-10-31T06:00Z",
+  "stofs3d": "2026-10-30T12:00Z",
+  "nwm_short": "2026-10-31T12:00Z",
+  "nwm_medium": "2026-10-31T06:00Z",
+  "cbofs": "2026-10-31T12:00Z",
+  "nws": "2026-10-31T17:31Z",
+  "psurge": null,
+  "petss": "2026-10-31T12Z",
+  "etss": "2026-10-31T12Z"
+ },
+ "guidance_setting": {
+  "mode": "adaptive"
+ },
+ "stations": {
+  "ALEV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:01652545",
+   "chances": {
+    "action": 0.008,
+    "minor": 0.0,
+    "moderate": 0.0,
+    "major": 0.0
+   }
+  },
+  "ARPV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:ARPV2",
+   "chances": {
+    "action": 0.001,
+    "minor": 0.0
+   }
+  },
+  "AXTV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0165258890",
+   "chances": {
+    "action": 0.024,
+    "minor": 0.011,
+    "moderate": 0.008,
+    "major": 0.0
+   }
+  },
+  "BBIV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:BBIV2",
+   "chances": {
+    "action": 0.842,
+    "minor": 0.659,
+    "moderate": 0.025,
+    "major": 0.013
+   }
+  },
+  "BISH": {
+   "guidance": "Forecast guidance: NWS official forecast 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8571421",
+   "chances": {
+    "action": 0.686,
+    "minor": 0.567,
+    "moderate": 0.039,
+    "major": 0.011
+   }
+  },
+  "BPAD": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:BPAD2",
+   "chances": {}
+  },
+  "BRDH": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "thredds:https://tds.vims.edu/thredds/dodsC/daveAll/drf/Tidewatch/BRDH.nc",
+   "chances": {}
+  },
+  "CBBT": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8638901",
+   "chances": {
+    "action": 0.075,
+    "minor": 0.012,
+    "moderate": 0.01,
+    "major": 0.008
+   }
+  },
+  "CCHV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:CCHV2",
+   "chances": {
+    "action": 0.372,
+    "minor": 0.024,
+    "moderate": 0.014,
+    "major": 0.006
+   }
+  },
+  "CHIV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:CHIV2",
+   "chances": {
+    "action": 0.671,
+    "minor": 0.02,
+    "moderate": 0.013,
+    "major": 0.01
+   }
+  },
+  "CNRC": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "archive:greenstream/CNRC",
+   "chances": {}
+  },
+  "CRSM": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:01485755",
+   "chances": {
+    "action": 0.61,
+    "minor": 0.178,
+    "moderate": 0.016,
+    "major": 0.013
+   }
+  },
+  "DAHL": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, NWS official forecast 12-36 h, NWS official forecast 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8635027",
+   "chances": {
+    "action": 0.6,
+    "minor": 0.053,
+    "moderate": 0.009,
+    "major": 0.003
+   }
+  },
+  "DPCV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:DPCV2",
+   "chances": {}
+  },
+  "ELGV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:ELGV2",
+   "chances": {
+    "action": 0.682,
+    "minor": 0.45,
+    "moderate": 0.014,
+    "major": 0.01
+   }
+  },
+  "EZMV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204288831",
+   "chances": {
+    "action": 0.672,
+    "minor": 0.406,
+    "moderate": 0.014,
+    "major": 0.009
+   }
+  },
+  "FEDV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:FEDV2",
+   "chances": {
+    "action": 0.01,
+    "minor": 0.0,
+    "moderate": 0.0,
+    "major": 0.0
+   }
+  },
+  "GTND": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:GTND2",
+   "chances": {
+    "action": 0.107,
+    "minor": 0.017,
+    "moderate": 0.01,
+    "major": 0.0
+   }
+  },
+  "HPPV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:HPPV2",
+   "chances": {
+    "action": 0.013,
+    "minor": 0.008,
+    "moderate": 0.006,
+    "major": 0.0
+   }
+  },
+  "IHDM": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:01655480",
+   "chances": {}
+  },
+  "JLMV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:JLMV2",
+   "chances": {
+    "action": 0.0,
+    "minor": 0.0,
+    "moderate": 0.0,
+    "major": 0.0
+   }
+  },
+  "JPHV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:JPHV2",
+   "chances": {
+    "action": 0.725,
+    "minor": 0.319,
+    "moderate": 0.013,
+    "major": 0.012
+   }
+  },
+  "KIPT": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8632200",
+   "chances": {
+    "action": 0.495,
+    "minor": 0.023,
+    "moderate": 0.011,
+    "major": 0.01
+   }
+  },
+  "KMNV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:KMNV2",
+   "chances": {
+    "action": 0.997,
+    "minor": 0.672,
+    "moderate": 0.018,
+    "major": 0.011
+   }
+  },
+  "LCEV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:LCEV2",
+   "chances": {
+    "action": 0.066,
+    "minor": 0.014,
+    "moderate": 0.013,
+    "major": 0.008
+   }
+  },
+  "LENM": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:LENM2",
+   "chances": {}
+  },
+  "LEWI": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS official forecast 12-36 h, NWS official forecast 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8635750",
+   "chances": {
+    "action": 0.435,
+    "minor": 0.018,
+    "moderate": 0.012,
+    "major": 0.011
+   }
+  },
+  "LSPV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:LSPV2",
+   "chances": {
+    "action": 0.014,
+    "minor": 0.013
+   }
+  },
+  "MNPT": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8639348",
+   "chances": {
+    "action": 0.602,
+    "minor": 0.042,
+    "moderate": 0.01,
+    "major": 0.007
+   }
+  },
+  "NRSV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:NRSV2",
+   "chances": {
+    "action": 0.016,
+    "minor": 0.013,
+    "moderate": 0.01,
+    "major": 0.004
+   }
+  },
+  "ONAV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:ONAV2",
+   "chances": {
+    "action": 0.014,
+    "minor": 0.013,
+    "moderate": 0.012,
+    "major": 0.004
+   }
+  },
+  "PCCV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:PCCV2",
+   "chances": {
+    "action": 0.237,
+    "minor": 0.018,
+    "moderate": 0.01,
+    "major": 0.008
+   }
+  },
+  "PRTV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:PRTV2",
+   "chances": {
+    "action": 0.669,
+    "minor": 0.573,
+    "moderate": 0.107,
+    "major": 0.015
+   }
+  },
+  "RAPV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:RAPV2",
+   "chances": {
+    "action": 0.732,
+    "minor": 0.509,
+    "moderate": 0.051,
+    "major": 0.015
+   }
+  },
+  "RDIV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:RDIV2",
+   "chances": {
+    "action": 0.024,
+    "minor": 0.01,
+    "moderate": 0.005,
+    "major": 0.0
+   }
+  },
+  "RICV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:02037705",
+   "chances": {
+    "action": 0.01,
+    "minor": 0.0,
+    "moderate": 0.0,
+    "major": 0.0
+   }
+  },
+  "SAXV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:SAXV2",
+   "chances": {
+    "action": 0.125,
+    "minor": 0.015,
+    "moderate": 0.013,
+    "major": 0.008
+   }
+  },
+  "SGSM": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:SGSM2",
+   "chances": {
+    "action": 0.802,
+    "minor": 0.182,
+    "moderate": 0.022,
+    "major": 0.013
+   }
+  },
+  "SLIM": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8577330",
+   "chances": {
+    "action": 0.587,
+    "minor": 0.159,
+    "moderate": 0.013,
+    "major": 0.013
+   }
+  },
+  "SLRV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:SLRV2",
+   "chances": {
+    "action": 0.015,
+    "minor": 0.013,
+    "moderate": 0.011,
+    "major": 0.008
+   }
+  },
+  "SMSV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:SMSV2",
+   "chances": {
+    "action": 0.174,
+    "minor": 0.037,
+    "moderate": 0.013,
+    "major": 0.012
+   }
+  },
+  "SWPT": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8638610",
+   "chances": {
+    "action": 0.627,
+    "minor": 0.034,
+    "moderate": 0.01,
+    "major": 0.007
+   }
+  },
+  "USAR": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:01485755",
+   "chances": {}
+  },
+  "USBB": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204300267",
+   "chances": {}
+  },
+  "USBC": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, StormSense model 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204288905",
+   "chances": {
+    "minor": 0.014,
+    "moderate": 0.01,
+    "major": 0.005
+   }
+  },
+  "USBK": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, NWM coastal (medium range) 12-36 h, NWM coastal (medium range) 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0167862550",
+   "chances": {}
+  },
+  "USBM": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, StormSense model 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204288539",
+   "chances": {}
+  },
+  "USFM": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, NWS ETSS 12-36 h, NOAA STOFS-2D-Global 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204289994",
+   "chances": {
+    "action": 0.367,
+    "minor": 0.016,
+    "moderate": 0.011,
+    "major": 0.005
+   }
+  },
+  "USHR": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204289985",
+   "chances": {
+    "action": 0.804,
+    "minor": 0.616,
+    "moderate": 0.011,
+    "major": 0.01
+   }
+  },
+  "USJT": {
+   "guidance": "Forecast guidance: NOAA STOFS-2D-Global 0-12 h, NOAA STOFS-2D-Global 12-36 h, NOAA STOFS-2D-Global 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:02042770",
+   "chances": {
+    "action": 0.024,
+    "minor": 0.01,
+    "moderate": 0.01,
+    "major": 0.01
+   }
+  },
+  "USLB": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, StormSense model 12-36 h, NWM coastal (medium range) 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204293125",
+   "chances": {
+    "action": 0.009,
+    "minor": 0.003,
+    "moderate": 0.0,
+    "major": 0.0
+   }
+  },
+  "USLI": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204292275",
+   "chances": {
+    "action": 0.686,
+    "minor": 0.506,
+    "moderate": 0.037,
+    "major": 0.014
+   }
+  },
+  "USLN": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204295505",
+   "chances": {
+    "action": 0.947,
+    "minor": 0.725,
+    "moderate": 0.224,
+    "major": 0.01
+   }
+  },
+  "USLN-X": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, StormSense model 12-36 h, StormSense model 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "archive:floodvision/USLN-X",
+   "chances": {}
+  },
+  "USLR": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204297575",
+   "chances": {
+    "action": 0.04,
+    "minor": 0.008,
+    "moderate": 0.004,
+    "major": 0.0
+   }
+  },
+  "USMB": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, StormSense model 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:02042928",
+   "chances": {}
+  },
+  "USNC": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWM coastal (medium range) 12-36 h, NWM coastal (medium range) 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0167892964",
+   "chances": {}
+  },
+  "USNR": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "same gauge: USSF (nwis:02042822)",
+   "chances": {
+    "action": 0.682,
+    "minor": 0.462,
+    "moderate": 0.01,
+    "major": 0.007
+   }
+  },
+  "USPA": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, StormSense model 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204288721",
+   "chances": {
+    "action": 0.017,
+    "minor": 0.013,
+    "moderate": 0.009,
+    "major": 0.004
+   }
+  },
+  "USPT": {
+   "guidance": "Forecast guidance: NWS official forecast 0-12 h, NWS official forecast 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:02042893",
+   "chances": {
+    "action": 0.448,
+    "minor": 0.02,
+    "moderate": 0.009,
+    "major": 0.007
+   }
+  },
+  "USSB": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:01484812",
+   "chances": {}
+  },
+  "USSF": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, StormSense model 12-36 h, NWS official forecast 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:02042822",
+   "chances": {
+    "action": 0.049,
+    "minor": 0.011,
+    "moderate": 0.006,
+    "major": 0.002
+   }
+  },
+  "USTC": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, StormSense model 12-36 h, NWM coastal (medium range) 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwis:0204291317",
+   "chances": {
+    "action": 0.012,
+    "minor": 0.01,
+    "moderate": 0.004,
+    "major": 0.0
+   }
+  },
+  "VIMS": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "stand-in: YRCG (coops:8637689)",
+   "chances": {
+    "action": 0.19,
+    "minor": 0.02,
+    "moderate": 0.014,
+    "major": 0.013
+   }
+  },
+  "WACH": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8631044",
+   "chances": {
+    "action": 0.355,
+    "minor": 0.016,
+    "moderate": 0.009,
+    "major": 0.007
+   }
+  },
+  "WADC": {
+   "guidance": "Forecast guidance: NWS ETSS 0-12 h, NWS official forecast 12-36 h, NWS official forecast 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8594900",
+   "chances": {
+    "action": 0.089,
+    "minor": 0.008,
+    "moderate": 0.007,
+    "major": 0.005
+   }
+  },
+  "WCKV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:WCKV2",
+   "chances": {
+    "action": 0.306,
+    "minor": 0.029,
+    "moderate": 0.014,
+    "major": 0.013
+   }
+  },
+  "WMPT": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, NWS official forecast 12-36 h, NOAA STOFS-2D-Global 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8636580",
+   "chances": {
+    "action": 0.046,
+    "minor": 0.012,
+    "moderate": 0.01,
+    "major": 0.01
+   }
+  },
+  "WRDV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:WRDV2",
+   "chances": {
+    "action": 0.037,
+    "minor": 0.014,
+    "moderate": 0.01,
+    "major": 0.007
+   }
+  },
+  "WRSV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:WRSV2",
+   "chances": {
+    "action": 0.012,
+    "minor": 0.01,
+    "moderate": 0.004,
+    "major": 0.0
+   }
+  },
+  "WRVV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:WRVV2",
+   "chances": {
+    "action": 0.614,
+    "minor": 0.111,
+    "moderate": 0.013,
+    "major": 0.008
+   }
+  },
+  "WSPV": {
+   "guidance": "Forecast guidance: NWS P-ETSS 0-12 h, NWS P-ETSS 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "nwps:WSPV2",
+   "chances": {
+    "action": 0.602,
+    "minor": 0.119,
+    "moderate": 0.012,
+    "major": 0.009
+   }
+  },
+  "YRCG": {
+   "guidance": "Forecast guidance: StormSense model 0-12 h, NWS official forecast 12-36 h, NWS P-ETSS 36-72 h (adaptive pick by recent skill) on the StormSense m30 tide",
+   "observations": "coops:8637689",
+   "chances": {
+    "action": 0.085,
+    "minor": 0.014,
+    "moderate": 0.011,
+    "major": 0.009
+   }
+  }
+ },
+ "missing": {
+  "GS01": "no public observation source (GreenStream API needs a key; not fetched yet)",
+  "GS02": "no public observation source (GreenStream API needs a key; not fetched yet)",
+  "USCB": "nwis:01484746: no readings",
+  "USSC": "nwis:01484938: no readings"
+ }
+}
