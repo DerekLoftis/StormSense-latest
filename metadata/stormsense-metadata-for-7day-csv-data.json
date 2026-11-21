@@ -1,0 +1,77 @@
+{
+ "title": "Metadata: StormSense Comma Separated Values (CSV) and JavaScript Object Notation (JSON) for 7-Day Hindcasts (7day)",
+ "product": "7day",
+ "datum": "MLLW",
+ "units": "feet",
+ "time_zone": "UTC (Z)",
+ "interval_minutes": 6,
+ "introduction": "Figure 1 shows a StormSense 7day hindcast chart and Table 1 the first and last rows of the matching download. Each field below is tied to the series it is drawn as in Figure 1 and to its column in Table 1.",
+ "figure_1": "Example StormSense Chart of 7 days of hindcast data (MLLW) at NOAA’s Sewells Point tide gauge, in Norfolk, VA, looking backward 7 days (168 hours) from October 15, 2026 at 16:36 EDT (2026-10-15T20:36:00Z).",
+ "table_1": "Example StormSense Table of 7day hindcast data (MLLW) at NOAA’s Sewells Point tide gauge, in Norfolk, VA, through October 15, 2026 at 16:36 EDT (2026-10-15T20:36:00Z): the first and last rows, with the rows between skipped (…).",
+ "fields_scope": "7day downloads only include observations from the last 7 days (168 hours) hindcast period (Figure 1; sample rows in Table 1)",
+ "fields": [
+  {
+   "name": "date_time_z",
+   "units": "UTC",
+   "chart_series": null,
+   "description": "Date and time in Zulu/GMT (UTC), formatted as a string leading with the date as “YYYY-MM-DD” followed by the time (T) as “hh:mm:ss” and Z for Zulu time. Recorded in regular 6-minute intervals (0, 6, 12 … 54 minutes past the hour), listed in chronological order (Table 1, first column)."
+  },
+  {
+   "name": "water_level_ft",
+   "units": "ft",
+   "chart_series": "Observed",
+   "description": "Observed storm tide water level for the past 7 days (168 hours) at this monitoring location (solid red line in Figure 1). Formatted in units of feet rounded to three decimal places (thousandth of a foot) relative to Mean Lower Low Water (MLLW)."
+  },
+  {
+   "name": "astro_tide_ft",
+   "units": "ft",
+   "chart_series": "Astronomic Tide",
+   "description": "Harmonically predicted astronomical tide at the same times (solid blue line in Figure 1), from P-ETSS, with NOAA CO-OPS tide predictions further back at NOAA gauges (they match P-ETSS’s tide to 0.01 ft). Blank in the CSV (null in the JSON) where no prediction reaches back that far. Formatted in units of feet rounded to three decimal places (thousandth of a foot) relative to Mean Lower Low Water (MLLW)."
+  },
+  {
+   "name": "residual_ft",
+   "units": "ft",
+   "chart_series": "Residual",
+   "description": "Observed residual: water_level_ft − astro_tide_ft, the non-tidal water level from wind, air pressure, rain and river flow (solid cyan line in Figure 1). Feet; the same in MLLW and NAVD88. Blank (null) where astro_tide_ft is blank."
+  }
+ ],
+ "notes": [
+  "Each CSV has a JSON twin at the same address with .json in place of .csv: station, product, datum, units, time_zone, updated, source, fields and a link to this metadata, then a data list with one record per CSV row keyed by the field names above (numbers in feet, blanks as null)."
+ ],
+ "datums": {
+  "description": "Gray reference lines labeled at the right of Figure 1; click a label to hide or show its line.",
+  "lines": [
+   {
+    "name": "HAT+1 … HAT+4",
+    "definition": "Reference lines 1, 2, 3 and 4 feet above HAT, for reading how far an extreme water level rises above the highest predicted tide. Where a station has no published HAT, the steps start from MHHW."
+   },
+   {
+    "name": "HAT",
+    "definition": "Highest Astronomical Tide: the highest water level predicted from the tide alone (no weather) over the National Tidal Datum Epoch (NTDE, 1983–2001)."
+   },
+   {
+    "name": "MHHW",
+    "definition": "Mean Higher High Water: the average of the higher of each day’s two high tides over the NTDE; a common threshold for nuisance (high-tide) flooding."
+   },
+   {
+    "name": "NAVD88",
+    "definition": "North American Vertical Datum of 1988: the fixed, land-based geodetic datum used for surveyed elevations, roads and flood maps."
+   },
+   {
+    "name": "MSL",
+    "definition": "Mean Sea Level: the average of hourly water levels over the NTDE."
+   },
+   {
+    "name": "MLLW",
+    "definition": "Mean Lower Low Water: the average of the lower of each day’s two low tides over the NTDE. It is zero on these charts and in these downloads."
+   },
+   {
+    "name": "LAT",
+    "definition": "Lowest Astronomical Tide: the lowest water level predicted from the tide alone over the NTDE."
+   }
+  ],
+  "source": "At NOAA-operated tide gauges the datums are NOAA’s published tidal datums for that station. USGS, VDEM and StormSense sensors natively report live water levels in NAVD88 only, so their MLLW forecasts and observations are datum-shifted from NAVD88 using the MLLW–NAVD88 separation derived from NOAA VDatum, and their tidal datum lines come from VDatum as well. Not every datum is available at every station.",
+  "vdatum": "https://vdatum.noaa.gov/vdatumweb/"
+ },
+ "companion_pdf": "stormsense-metadata-for-7day-csv-data.pdf"
+}
